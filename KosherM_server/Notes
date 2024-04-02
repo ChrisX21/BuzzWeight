@@ -1,0 +1,21 @@
+    ESP8266 Communication with Raspberry Pi:
+        Use ESP8266 to gather sensor data and communicate directly with the Raspberry Pi in each building.
+        ESP8266 can send data to the Raspberry Pi via Wi-Fi using TCP/IP or UDP communication protocols. This can be achieved using HTTP requests or MQTT protocol.
+        MQTT (Message Queuing Telemetry Transport) is a lightweight messaging protocol that's ideal for IoT applications. It's efficient and supports both publishing and subscribing to topics, making it suitable for sensor data transmission.
+        You can use popular ESP8266 libraries like PubSubClient to implement MQTT communication.
+
+    Raspberry Pi Setup:
+        Set up each Raspberry Pi to run a Python script or a Node.js application that listens for incoming data from ESP8266.
+        Parse the data received from ESP8266 and organize it into a suitable format.
+        Once the data is collected and organized, make HTTP POST requests or send data through MQTT to the main server.
+
+    Main Server Setup:
+        Set up the main server with an Express.js web server to handle incoming data from all buildings.
+        Implement an endpoint to receive data from Raspberry Pis in each building.
+        Upon receiving data, store it in a database or process it as required by your application.
+        You can also implement authentication and authorization mechanisms if needed to ensure secure communication between buildings and the main server.
+
+    Web Application:
+        Develop a web application that fetches data from the main server and presents it in a user-friendly interface.
+        Use technologies like React.js, Angular, or Vue.js for frontend development.
+        The web application can provide visualization, analytics, and control functionalities based on the sensor data received.
