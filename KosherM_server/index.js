@@ -150,7 +150,20 @@ app.get("/dashboard/export/:Id", authenticateToken, async (req, res) => {
 
 app.get("/users", authenticateToken, async (req, res) => {
   const users = await getAllUsers();
-  res.json(users.map(user => ({ Id: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, Role: user.Name })));
+
+  const formatDate = (date) => {
+    const options = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    };
+    return new Date(date).toLocaleString('en-GB', options);
+
+  };
+  res.json(users.map(user => ({ Id: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, Role: user.Name, CreatedOn: formatDate(user.CreatedOn) })));
 })
 
 app.post("/users/new/user", authenticateToken, async (req, res) => {

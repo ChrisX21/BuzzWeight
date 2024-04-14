@@ -4,6 +4,13 @@ import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Header from '../Components/Header'
 
+const images = [
+    require('../Images/trailer_1.jpg'),
+    require('../Images/trailer_2.jpg'),
+    require('../Images/trailer_3.jpg'),
+    require('../Images/trailer_4.jpg')
+]
+
 function Home() {
 
     return (
@@ -12,10 +19,20 @@ function Home() {
             <TextWrapper>
                 <h3>Revolutionizing Hive Management for Busy Beekeepers Everywhere</h3>
                 <Carousel>
-                    <Splide>
-                        <SplideSlide>
+                    <Splide
+                        options={{
+                            type: 'fade',
+                            rewind: true,
+                            width: '100%',
+                            height: '100%'
+                        }}>
 
-                        </SplideSlide>
+                        {
+                            images.map((image, index) => (
+                                <SplideSlide key={index}>
+                                    <img src={image} alt={`Image ${index + 1}`} />
+                                </SplideSlide>
+                            ))}
                     </Splide>
                 </Carousel>
             </TextWrapper>
@@ -59,5 +76,5 @@ const TextWrapper = styled.div`
     }
 }
 `
-    
+
 export default Home
