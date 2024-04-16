@@ -23,14 +23,15 @@ function Home() {
                         options={{
                             type: 'fade',
                             rewind: true,
-                            width: '100%',
-                            height: '100%'
+                            width: '90%',
+                            height: '50%'
+
                         }}>
 
                         {
                             images.map((image, index) => (
-                                <SplideSlide key={index}>
-                                    <img src={image} alt={`Image ${index + 1}`} />
+                                <SplideSlide key={index} >
+                                    <img src={image} alt={`Image ${index + 1}`} style={{ objectFit: 'cover', width: '100%', height: '50%', borderRadius: '2rem' }} />
                                 </SplideSlide>
                             ))}
                     </Splide>
@@ -46,16 +47,16 @@ const Carousel = styled.div`
     justify-content: center;
     align-items: center;
     margin: 2rem 0rem;
-    margin-top: 20rem;
+    margin-top: 10rem;
     border-radius: 2rem;
 `
 
 const TextWrapper = styled.div`
     text-align: center;
     margin: 2rem 0rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-top: 4rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-top: 3rem;
     padding: 2rem;
     margin-bottom: 5rem;
     border-radius: 2rem;
@@ -63,7 +64,7 @@ const TextWrapper = styled.div`
     position: relative;
     h3 {
         position: absolute; 
-        top: 15%;
+        top: 10%;
         left: 50%; 
         transform: translate(-50%, -50%); 
         padding: 1rem;
