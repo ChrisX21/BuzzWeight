@@ -5,9 +5,9 @@ import '@splidejs/react-splide/css';
 import Header from '../Components/Header'
 
 const images = [
+    require('../Images/trailer_3.jpg'),
     require('../Images/trailer_1.jpg'),
     require('../Images/trailer_2.jpg'),
-    require('../Images/trailer_3.jpg'),
     require('../Images/trailer_4.jpg')
 ]
 
@@ -23,15 +23,13 @@ function Home() {
                         options={{
                             type: 'fade',
                             rewind: true,
-                            width: '90%',
-                            height: '50%'
-
+                            width: '95%'
                         }}>
 
                         {
                             images.map((image, index) => (
-                                <SplideSlide key={index} >
-                                    <img src={image} alt={`Image ${index + 1}`} style={{ objectFit: 'cover', width: '100%', height: '50%', borderRadius: '2rem' }} />
+                                <SplideSlide key={index} style={{ height: '60%' }}>
+                                    <img src={image} alt={`Image ${index + 1}`} style={{ objectFit: 'cover', width: '100%', height: '60%', borderRadius: '2rem' }} />
                                 </SplideSlide>
                             ))}
                     </Splide>
