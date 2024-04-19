@@ -7,7 +7,7 @@ const pool = mariadb.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: "KosherM"
+  database: process.env.DB_DATABASE,
 }).promise();
 
 pool.getConnection()

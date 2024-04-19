@@ -26,7 +26,9 @@ function Login() {
             if (data.message === "Login successful!") {
                 navigate("/");
                 window.location.reload();
-
+            }
+            else {
+                alert('Wrong password. Please try again.');
             }
         }
         catch (error) {
@@ -41,10 +43,10 @@ function Login() {
                 <SForm onSubmit={submitUser}>
                     <h1>Login</h1>
                     <div>
-                        <input type='email' value={email} placeholder='Email' onChange={(e) => setEmail(e.target.value)} />
+                        <input type='email' value={email} placeholder='Email' onChange={(e) => setEmail(e.target.value)} required />
                     </div>
                     <div>
-                        <input type='password' value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)} />
+                        <input type='password' value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)} required />
                     </div>
                     <div>
                         <SButton type='submit'>Login</SButton>

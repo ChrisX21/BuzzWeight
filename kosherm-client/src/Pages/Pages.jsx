@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Home from './Home';
-import About from './About';
+import Contacts from './Contacts';
 import Login from './Login';
 import Dashboard from './Dashboard';
 import Users from './Users';
@@ -54,7 +54,7 @@ function Pages() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
+                <Route path="/contacts" element={<Contacts />} />
                 {!isLoggedIn && <Route path="/login" element={<Login />} />}
                 {isLoggedIn && (
                     <>

@@ -71,7 +71,7 @@ function Header() {
                 <SLinkTitle to="/">BuzzWeight<Icon /></SLinkTitle>
                 <MenuButton onClick={toggleMenu} />
                 <MenuWrapper active={menuActive}>
-                    <SLink to="/about">About</SLink>
+                    <SLink to="/contacts">Contacts</SLink>
                     {!isLoggedIn && <SLink to="/login">Login</SLink>}
                     {isLoggedIn && (
                         <>

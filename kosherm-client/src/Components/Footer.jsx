@@ -2,7 +2,10 @@ import React from 'react'
 
 function Footer() {
     return (
-        <div>Footer</div>
+        <>
+            <p>© 2024 BuzzWeight</p>
+            <p style={{ marginTop: '1rem' }}>Created by Kristiyan Aleksiev</p>
+        </>
     )
 }
 

@@ -25,7 +25,8 @@ function TrailerDataGraph() {
                 const data = await response.json();
                 setSensorData(data.sensorData);
                 setLoading(false);
-            } catch (error) {
+            }
+            catch (error) {
                 console.log("Error fetching sensor data: ", error);
             }
         };

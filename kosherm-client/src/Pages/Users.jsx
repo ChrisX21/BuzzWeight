@@ -26,6 +26,10 @@ function Users() {
             <Header />
             <Title>Users</Title>
             <Wrapper>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', marginBottom: '1rem' }}>
+                    <Ssearch placeholder='Search' type='search'></Ssearch>
+                    <SsearchButton><FiSearch /></SsearchButton>
+                </div>
                 <STable>
                     <thead>
                         <tr>
@@ -34,6 +38,7 @@ function Users() {
                             <TableHead>Last Name</TableHead>
                             <TableHead>Email</TableHead>
                             <TableHead>Role</TableHead>
+                            <TableHead>Created On</TableHead>
                             <TableHead>Operations</TableHead>
                         </tr>
                     </thead>
@@ -45,6 +50,7 @@ function Users() {
                                 <TableData>{user.LastName}</TableData>
                                 <TableData>{user.Email}</TableData>
                                 <TableData>{user.Role}</TableData>
+                                <TableData>{user.CreatedOn}</TableData>
                                 <TableData>
                                     <SButton>Update</SButton>
                                     <DelButton>Delete</DelButton>
@@ -53,12 +59,8 @@ function Users() {
                         ))}
                     </tbody>
                 </STable>
-                <br />
-                <Ssearch placeholder='Search'></Ssearch>
-                <SsearchButton><FiSearch /></SsearchButton>
                 <CNUbutton>Create new user</CNUbutton>
             </Wrapper>
-
         </>
     )
 }
@@ -71,12 +73,14 @@ const Title = styled.h1`
 `
 
 const Ssearch = styled.input`
+    display: inline-block;
     padding: 0.5rem;
     margin: 0.5rem;
     border-radius: 1rem;
     border: 1px solid #e9ab17;
 `
 const SsearchButton = styled.button`
+    display: inline-block;
     padding: 0.5rem;
     border-radius: 1rem;
     border: 1px solid #e9ab17;
@@ -89,29 +93,30 @@ const SsearchButton = styled.button`
     &:hover {
         background-color: #ffcc00;
     }
-
-`
-
-const Wrapper = styled.div`
-    display: inline-block;
-    justify-content: center;
-    background-color: #f0f0f0;
-    border-radius: 1rem;
-    padding: 2rem;
-    margin: 0rem 2rem;
 `
 const CNUbutton = styled.button`
     background-color: #e9ab17;
     border-radius: 1rem;
     border: none;
     padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
+    margin-top: 1rem;
     cursor: pointer;
 
     &:hover {
         color: white;
         transition: 0.3s;
     }
+`
+
+const Wrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 2rem ;
+    background-color: #f0f0f0;
+    border-radius: 1rem;
+    padding: 2rem;
 `
 
 const STable = styled.table`
