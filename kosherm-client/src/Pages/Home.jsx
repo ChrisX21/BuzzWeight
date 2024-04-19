@@ -38,7 +38,7 @@ function Home() {
                 </Carousel>
             </TextWrapper>
             <TextWrapper >
-                <p style={{ fontSize: '1.3rem' }}>Experience the future of beehive monitoring with our groundbreaking solution, ensuring efficiency, security, and speed. Our BuzzWeight trailers boast four Pollen Scales, one Hive Scale, a Weather Station, and four Conveyor Belt lines, streamlining bee pollen collection like never before.</p>
+                <p style={{ fontSize: '1.3rem' }}>Experience the future of beehive monitoring with our solutions, ensuring efficiency, security, and speed. Our BuzzWeight trailers boast four Pollen Scales, one Hive Scale, a Weather Station, and four Conveyor Belt lines, streamlining bee pollen collection like never before.</p>
             </TextWrapper>
             <TextWrapper style={{ margin: '0 2rem', borderBottomLeftRadius: '0', borderBottomRightRadius: '0' }}>
                 <Footer />
