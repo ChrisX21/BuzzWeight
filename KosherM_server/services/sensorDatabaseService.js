@@ -27,7 +27,16 @@ const sensorDatabaseService = {
         }
     },
     retrieveData: async () => {
-        
+        try {
+            await influx.getQueryApi(process.env.INFLUXDB_ORG)
+                .queryRows('from(bucket: "' + process.env.INFLUXDB_BUCKET + '") |> range(start: -12h)', {
+
+                })
+            console.log('data retrieve successful influxdb');
+        }
+        catch (error) {
+            console.error('Error retrieving data from influxdb: ', error);
+        }
     }
 }
 
