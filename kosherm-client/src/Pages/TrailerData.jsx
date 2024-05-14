@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { TbArrowBackUp } from "react-icons/tb";
 import Header from '../Components/Header';
@@ -10,35 +10,22 @@ import TrailerSensorsGraph from '../Components/TrailerSensorsGraph';
 function TrailerData() {
     const { id } = useParams();
 
+    if (id > 5) {
+        return <Navigate to="/NotFound" />;
+    }
+
     return (
         <>
             <Header />
             <Title>Trailer {id}</Title>
-            <Wrapper>
-                <TrailerDataTableWrapper>
-                    <TrailerDataTable />
-                </TrailerDataTableWrapper>
-                <TrailerDataGraphWrapper>
-                    <TrailerDataGraph />
-                </TrailerDataGraphWrapper>
-            </Wrapper>
+            <TrailerDataTable />
             <TrailerSensorsGraph />
+            <TrailerDataGraph />
             <SreturnButton to='/dashboard'><TbArrowBackUp />   Return to Dashboard</SreturnButton>
         </>
     );
 }
-const Wrapper = styled.div`
-    display: flex;
-    justify-content: space-between;
-`
 
-const TrailerDataTableWrapper = styled.div`
-    flex: 1;
-`
-
-const TrailerDataGraphWrapper = styled.div`
-    flex: 1;
-`
 const Title = styled.h1`
     text-align: center;
     margin: 2rem;

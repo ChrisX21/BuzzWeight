@@ -69,5 +69,4 @@ function Pages() {
         </BrowserRouter>
     );
 }
-
 export default Pages;

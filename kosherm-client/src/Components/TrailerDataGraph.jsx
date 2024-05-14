@@ -36,8 +36,8 @@ function TrailerDataGraph() {
     const formatSensorDataForChart = (data) => {
         if (!data) return null;
 
-        const labels = data.map(entry => entry.Date);
-        const weights = data.map(entry => entry.WeightSensorK);
+        const labels = data.map(entry => entry._time);
+        const weights = data.map(entry => entry.scaleH);
 
         return {
             labels: labels,
@@ -113,15 +113,12 @@ function TrailerDataGraph() {
 }
 
 const SLine = styled(Line)`
-    width: 100%;
-    height: 100%;
-    margin: 2rem 0rem;
-    padding: 2rem;
-    margin-top: 4rem;
-    margin-right: 2rem;
-    border-radius: 1rem;
-    border: 3px solid #e9ab17;
-    position: relative;
-`;
+        margin: 2rem 10rem;
+        padding: 2rem;
+        margin-top: 2rem;
+        border-radius: 1rem;
+        border: 3px solid #e9ab17;
+        position: relative;
+        `;
 
 export default TrailerDataGraph;

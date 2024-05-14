@@ -36,8 +36,8 @@ function TrailerSensorsGraph() {
     const formatDataForChart = (data) => {
         if (!data) return null;
 
-        const labels = data.map(entry => entry.Date);
-        const weights = ['WeightSensor1', 'WeightSensor2', 'WeightSensor3', 'WeightSensor4'];
+        const labels = data.map(entry => entry._time);
+        const weights = ['scale1', 'scale2', 'scale3', 'scale4'];
         const datasets = weights.map((weight, index) => {
             let color;
             switch (index) {

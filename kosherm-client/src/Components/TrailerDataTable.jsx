@@ -48,41 +48,51 @@ function TrailerDataTable() {
                 <StyledTable>
                     <thead>
                         <tr>
-                            <TableHead>ID</TableHead>
                             <TableHead>Scale 1</TableHead>
                             <TableHead>Scale 2</TableHead>
                             <TableHead>Scale 3</TableHead>
                             <TableHead>Scale 4</TableHead>
                             <TableHead>Scale Hive</TableHead>
+                            <TableHead>Hive temp</TableHead>
+                            <TableHead>Inside temp</TableHead>
+                            <TableHead>Outside temp</TableHead>
+                            <TableHead>Hive Humidity</TableHead>
+                            <TableHead>Inside Humidity</TableHead>
+                            <TableHead>Outside Humidity</TableHead>
                             <TableHead>Date</TableHead>
                         </tr>
                     </thead>
                     <tbody>
                         {sensorData && sensorData.map((data, index) => (
                             <tr key={index}>
-                                <TableData>{data.Id}</TableData>
-                                <TableData>{data.WeightSensor1} g</TableData>
-                                <TableData>{data.WeightSensor2} g</TableData>
-                                <TableData>{data.WeightSensor3} g</TableData>
-                                <TableData>{data.WeightSensor4} g</TableData>
-                                <TableData>{data.WeightSensorK} kg</TableData>
-                                <TableData>{formatDate(data.Date)}</TableData>
+                                <TableData>{data.scale1} g</TableData>
+                                <TableData>{data.scale2} g</TableData>
+                                <TableData>{data.scale3} g</TableData>
+                                <TableData>{data.scale4} g</TableData>
+                                <TableData>{data.scaleH} kg</TableData>
+                                <TableData>{data.temp1} °C</TableData>
+                                <TableData>{data.temp2} °C</TableData>
+                                <TableData>{data.temp3} °C</TableData>
+                                <TableData>{data.hum1} %</TableData>
+                                <TableData>{data.hum2} %</TableData>
+                                <TableData>{data.hum3} %</TableData>
+                                <TableData>{formatDate(data._time)}</TableData>
                             </tr>
                         ))}
                     </tbody>
                 </StyledTable>
-                <Slink onClick={exportData}>Export Table</Slink>
             </Wrapper>
+            <Slink onClick={exportData}>Export Table</Slink>
         </>
     )
 }
 
 const Wrapper = styled.div`
-    margin: 2rem auto;
-    position: absolute;
+    display: flex;
+    margin: 2rem 6rem;
     top: 25%;
-    padding: 2rem;
-    width: 50%; 
+    
+
 `
 
 const Slink = styled(Link)`
@@ -90,7 +100,6 @@ const Slink = styled(Link)`
     text-align: center;
     text-decoration: none;
     margin: 0 auto; 
-    margin-top: 1rem;
     width: 20%;
     color: black;
     padding: 0.7rem;
@@ -107,6 +116,7 @@ const Slink = styled(Link)`
 
 const StyledTable = styled.table`
     border-collapse: collapse;
+    
     border: 3px solid #e9ab17;
     tr:nth-child(even) {
         background-color: #f5f5f5;

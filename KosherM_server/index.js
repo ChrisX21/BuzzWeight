@@ -5,7 +5,8 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { getUserByEmail, getLatestSensorDataForTrailer, getSensorDataForTrailer, getAllUsers, createUser } from './database.js';
+import { getUserByEmail, getLatestSensorDataForTrailer, getSensorDataForTrailer, getAllUsers, createUser } from './services/userDatabaseService.js';
+import { getLatestSensorData } from './services/queryInfluxService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -18,6 +19,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+const formatDate = (date) => {
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  };
+  return new Date(date).toLocaleString('en-GB', options);
+};
 
 const authenticateToken = (req, res, next) => {
   const accessToken = req.cookies.accessToken;
@@ -131,38 +143,28 @@ app.get("/logout", (req, res) => {
 
 app.get("/dashboard/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
-  const sensorData = await getLatestSensorDataForTrailer(trailerId);
+  const sensorData = await getLatestSensorData(trailerId);
   res.json({ sensorData });
 });
 
 app.get("/dashboard/export/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
-  const sensorData = await getSensorDataForTrailer(trailerId);
+  const sensorData = await getLatestSensorData(trailerId);
+
   const csv = sensorData.map(data => {
-    return `${data.Date},${data.WeightSensor1},${data.WeightSensor2},${data.WeightSensor3},${data.WeightSensor4},${data.WeightSensorK}`;
+    return `${formatDate(data._time)},${data.scale1}g,${data.scale2}g,${data.scale3}g,${data.scale4}g,${data.scaleH}kg,${data.temp1}°C,${data.temp2}°C,${data.temp3}°C,${data.hum1}%,${data.hum2}%,${data.hum3}%`;
   }).join('\n');
 
   res.setHeader('Content-Type', 'text/csv');
   res.setHeader('Content-Disposition', 'attachment; filename="sensorData.csv"');
   res.send(csv);
-
 });
 
 app.get("/users", authenticateToken, async (req, res) => {
   const users = await getAllUsers();
 
-  const formatDate = (date) => {
-    const options = {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    };
-    return new Date(date).toLocaleString('en-GB', options);
 
-  };
+
   res.json(users.map(user => ({ Id: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, Role: user.Name, CreatedOn: formatDate(user.CreatedOn) })));
 })
 
