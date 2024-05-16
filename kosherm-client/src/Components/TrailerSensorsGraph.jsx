@@ -104,6 +104,9 @@ function TrailerSensorsGraph() {
                 max: 300,
                 ticks: {
                     stepSize: 10
+                },
+                grid: {
+                    display: false
                 }
             }
         },
