@@ -19,36 +19,17 @@ function Pages() {
                 const data = await response.json();
                 if (data.authenticated) {
                     setIsLoggedIn(true);
-                } else {
-                    setIsLoggedIn(false);
+                    if (data.admin) {
+                        setIsAdmin(true);
+                    }
                 }
-            } catch (error) {
+            }
+            catch (error) {
                 console.error('Error validating token:', error);
-                setIsLoggedIn(false);
             }
         };
         isTokenValid();
     }, []);
-
-    useEffect(() => {
-        const isAdminUser = async () => {
-            try {
-                const response = await fetch('/admin');
-                const data = await response.json();
-                if (data.admin) {
-                    setIsAdmin(true);
-                } else {
-                    setIsAdmin(false);
-                }
-            } catch (error) {
-                console.error('Error checking admin status:', error);
-                setIsAdmin(false);
-            }
-        };
-        if (isLoggedIn) {
-            isAdminUser();
-        }
-    }, [isLoggedIn]);
 
     return (
         <BrowserRouter>

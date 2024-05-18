@@ -35,7 +35,7 @@ const authenticateToken = (req, res, next) => {
   const accessToken = req.cookies.accessToken;
 
   if (!accessToken) {
-    return res.json({ message: "Access token not found" });
+    return res.json({ authenticated: false });
   }
 
   jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -108,38 +108,17 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get('/auth', (req, res) => {
-  return authenticateToken(req, res, () => {
-    res.json({ authenticated: true });
-  });
+app.get('/auth', authenticateToken, (req, res) => {
+  const authenticated = true;
+  const admin = req.user.RoleId === 3 || req.user.RoleId === 1;
+  res.json({ authenticated, admin });
 });
-
-app.get('/admin', (req, res) => {
-  const token = req.cookies.accessToken;
-  if (token != null) {
-    const user = jwt.decode(token);
-
-    if (user.RoleId === 3 || user.RoleId === 1) {
-      res.json({ admin: true });
-    }
-    else {
-      res.json({ admin: false });
-    }
-  }
-  else {
-    res.json({ message: 'User is not logged in' });
-  }
-})
 
 app.get("/logout", (req, res) => {
   res.clearCookie('accessToken');
   res.clearCookie('refreshToken');
   res.json({ message: "Logged out successfully" });
 });
-
-// app.get("/*", (req, res) => {
-//   res.sendFile(__dirname + "/build/index.html");
-// })
 
 app.get("/dashboard/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
@@ -162,17 +141,20 @@ app.get("/dashboard/export/:Id", authenticateToken, async (req, res) => {
 
 app.get("/users", authenticateToken, async (req, res) => {
   const users = await getAllUsers();
-
-
-
   res.json(users.map(user => ({ Id: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, Role: user.Name, CreatedOn: formatDate(user.CreatedOn) })));
 })
 
 app.post("/users/new/user", authenticateToken, async (req, res) => {
   const user = req.body;
   await createUser(user.Email, user.Password, user.FirstName, user.LastName, user.RoleId);
-  res.json("User created successfully!");
+  res.json({ message: "User created successfully!" });
 })
+
+//Add edit and delete user handling here with transactions!
+
+// app.get("/*", (req, res) => {
+//   res.sendFile(__dirname + "/build/index.html");
+// })
 
 app.listen(8080, () => {
   console.log("Server is running on port 8080");
