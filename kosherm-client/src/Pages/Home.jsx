@@ -1,16 +1,8 @@
 import { React } from 'react'
 import styled from 'styled-components'
-import { Splide, SplideSlide } from '@splidejs/react-splide';
-import '@splidejs/react-splide/css';
+import HomeCarousel from '../Components/HomeCarousel'
 import Header from '../Components/Header'
 import Footer from '../Components/Footer'
-
-const images = [
-    require('../Images/trailer_3.jpg'),
-    require('../Images/trailer_1.jpg'),
-    require('../Images/trailer_2.jpg'),
-    require('../Images/trailer_4.jpg')
-]
 
 function Home() {
 
@@ -20,21 +12,7 @@ function Home() {
             <TextWrapper>
                 <h3>Revolutionizing Hive Management for Busy Beekeepers Everywhere</h3>
                 <Carousel>
-                    <Splide
-                        options={{
-                            type: 'fade',
-                            rewind: true,
-                            width: '95%',
-                            height: '40rem'
-                        }}>
-
-                        {
-                            images.map((image, index) => (
-                                <SplideSlide key={index} style={{ height: '60%' }}>
-                                    <img src={image} alt={`Image ${index + 1}`} style={{ objectFit: 'cover', width: '100%', height: '40rem', borderRadius: '2rem' }} />
-                                </SplideSlide>
-                            ))}
-                    </Splide>
+                    <HomeCarousel />
                 </Carousel>
             </TextWrapper>
             <TextWrapper >
