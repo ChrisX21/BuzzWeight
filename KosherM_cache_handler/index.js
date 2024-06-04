@@ -12,7 +12,6 @@ redisClient.on('error', (error) => {
 });
 
 redisClient.on('ready', () => {
-    console.log('Redis is ready!');
 
     const client = mqtt.connect('mqtt://localhost:1883');
 
@@ -27,7 +26,7 @@ redisClient.on('ready', () => {
     });
 
     client.on('message', async (topic, message) => {
-        console.log(`Received message from ${topic}: ${message.toString()}`);
+
         const data = JSON.parse(message.toString());
         const keys = Object.keys(data);
         for (const key of keys) {
@@ -53,18 +52,6 @@ redisClient.on('ready', () => {
     client.on('offline', () => {
         console.log('Sensor is offline');
     });
-});
-
-redisClient.on('end', () => {
-    console.log('Redis connection closed');
-});
-
-redisClient.on('reconnecting', () => {
-    console.log('Redis reconnecting...');
-});
-
-redisClient.on('warning', (warning) => {
-    console.warn("Redis warning: " + warning);
 });
 
 await redisClient.connect();

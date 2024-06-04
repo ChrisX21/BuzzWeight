@@ -30,7 +30,6 @@ const formatDate = (date) => {
   };
   return new Date(date).toLocaleString('en-GB', options);
 };
-
 const authenticateToken = (req, res, next) => {
   const accessToken = req.cookies.accessToken;
 
@@ -69,7 +68,6 @@ const authenticateToken = (req, res, next) => {
     }
   });
 };
-
 const generateAccessToken = (user) => {
   delete user.exp;
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
@@ -77,7 +75,7 @@ const generateAccessToken = (user) => {
 const generateRefreshToken = (user) => {
   delete user.exp;
   return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-}
+};
 
 app.post("/login", async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
@@ -120,6 +118,17 @@ app.get("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
+app.post('/receiveData', async (req, res) => {
+  try {
+    const data = req.body;
+    await writeSensorData(data, data.TrailerId);
+    res.status(200).json({ message: "Data received successfully!" });
+  } 
+  catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 app.get("/dashboard/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
   const sensorData = await getLatestSensorData(trailerId);
@@ -142,13 +151,13 @@ app.get("/dashboard/export/:Id", authenticateToken, async (req, res) => {
 app.get("/users", authenticateToken, async (req, res) => {
   const users = await getAllUsers();
   res.json(users.map(user => ({ Id: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, Role: user.Name, CreatedOn: formatDate(user.CreatedOn) })));
-})
+});
 
 app.post("/users/new/user", authenticateToken, async (req, res) => {
   const user = req.body;
   await createUser(user.Email, user.Password, user.FirstName, user.LastName, user.RoleId);
   res.json({ message: "User created successfully!" });
-})
+});
 
 //Add edit and delete user handling here with transactions!
 
