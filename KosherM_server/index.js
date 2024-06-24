@@ -30,12 +30,11 @@ const formatDate = (date) => {
   };
   return new Date(date).toLocaleString('en-GB', options);
 };
-
 const authenticateToken = (req, res, next) => {
   const accessToken = req.cookies.accessToken;
 
   if (!accessToken) {
-    return res.json({ message: "Access token not found" });
+    return res.json({ authenticated: false });
   }
 
   jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -69,7 +68,6 @@ const authenticateToken = (req, res, next) => {
     }
   });
 };
-
 const generateAccessToken = (user) => {
   delete user.exp;
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
@@ -77,7 +75,7 @@ const generateAccessToken = (user) => {
 const generateRefreshToken = (user) => {
   delete user.exp;
   return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
-}
+};
 
 app.post("/login", async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
@@ -108,28 +106,11 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get('/auth', (req, res) => {
-  return authenticateToken(req, res, () => {
-    res.json({ authenticated: true });
-  });
+app.get('/auth', authenticateToken, (req, res) => {
+  const authenticated = true;
+  const admin = req.user.RoleId === 3 || req.user.RoleId === 1;
+  res.json({ authenticated, admin });
 });
-
-app.get('/admin', (req, res) => {
-  const token = req.cookies.accessToken;
-  if (token != null) {
-    const user = jwt.decode(token);
-
-    if (user.RoleId === 3 || user.RoleId === 1) {
-      res.json({ admin: true });
-    }
-    else {
-      res.json({ admin: false });
-    }
-  }
-  else {
-    res.json({ message: 'User is not logged in' });
-  }
-})
 
 app.get("/logout", (req, res) => {
   res.clearCookie('accessToken');
@@ -137,9 +118,16 @@ app.get("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-// app.get("/*", (req, res) => {
-//   res.sendFile(__dirname + "/build/index.html");
-// })
+app.post('/receiveData', async (req, res) => {
+  try {
+    const data = req.body;
+    await writeSensorData(data, data.TrailerId);
+    res.status(200).json({ message: "Data received successfully!" });
+  } 
+  catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 app.get("/dashboard/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
@@ -162,17 +150,20 @@ app.get("/dashboard/export/:Id", authenticateToken, async (req, res) => {
 
 app.get("/users", authenticateToken, async (req, res) => {
   const users = await getAllUsers();
-
-
-
   res.json(users.map(user => ({ Id: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, Role: user.Name, CreatedOn: formatDate(user.CreatedOn) })));
-})
+});
 
 app.post("/users/new/user", authenticateToken, async (req, res) => {
   const user = req.body;
   await createUser(user.Email, user.Password, user.FirstName, user.LastName, user.RoleId);
-  res.json("User created successfully!");
-})
+  res.json({ message: "User created successfully!" });
+});
+
+//Add edit and delete user handling here with transactions!
+
+// app.get("/*", (req, res) => {
+//   res.sendFile(__dirname + "/build/index.html");
+// })
 
 app.listen(8080, () => {
   console.log("Server is running on port 8080");

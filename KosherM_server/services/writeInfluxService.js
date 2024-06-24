@@ -7,7 +7,8 @@ const writeApi = new InfluxDB(
     {
         url: process.env.INFLUXDB_URL,
         token: process.env.INFLUXDB_TOKEN
-    }).getWriteApi(
+    })
+    .getWriteApi(
         process.env.INFLUXDB_ORG,
         process.env.INFLUXDB_BUCKET, 's');
 
@@ -23,14 +24,5 @@ export const writeSensorData = async (sensorData, trailerId) => {
     writeApi.writePoint(point);
     await writeApi.close();
 }
-// export const writeSensorData = async (trailerId, sensor, value) => {
-//     const point = new Point('sensors')
-//         .tag('trailerId', trailerId)
-//         .tag('sensor', sensor)
-//         .floatField('value', value)
-//         .timestamp(new Date());
-//     writeApi.writePoint(point);
-//     await writeApi.flush();
-// }
 
 

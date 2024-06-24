@@ -41,29 +41,14 @@ function Header() {
                 const response = await fetch('/auth');
                 const data = await response.json();
                 setIsLoggedIn(data.authenticated);
-            } catch (error) {
+                setIsAdmin(data.admin);
+            }
+            catch (error) {
                 console.error('Error validating token:', error);
-                setIsLoggedIn(false);
             }
         };
         isTokenValid();
     }, []);
-
-    useEffect(() => {
-        const isAdminUser = async () => {
-            try {
-                const response = await fetch('/admin');
-                const data = await response.json();
-                setIsAdmin(data.admin);
-            } catch (error) {
-                console.error('Error checking admin status:', error);
-                setIsAdmin(false);
-            }
-        };
-        if (isLoggedIn) {
-            isAdminUser();
-        }
-    }, [isLoggedIn]);
 
     return (
         <>
