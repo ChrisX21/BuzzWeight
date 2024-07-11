@@ -31,6 +31,7 @@ redisClient.on('ready', () => {
         const keys = Object.keys(data);
         for (const key of keys) {
             const value = data[key];
+            
             try {
                 await redisClient.set(String(key), value, 'EX', 1800);
                 console.log(`Set ${key} to Redis with value ${value}`);

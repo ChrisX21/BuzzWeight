@@ -124,5 +124,4 @@ const SButton = styled.button`
             margin-top: 1rem;
         }
 `
-
 export default Login

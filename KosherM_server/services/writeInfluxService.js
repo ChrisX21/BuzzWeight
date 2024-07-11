@@ -25,4 +25,20 @@ export const writeSensorData = async (sensorData, trailerId) => {
     await writeApi.close();
 }
 
+// const sensorData = {
+//     Scale1: 10,
+//     Scale2: 20,
+//     Scale3: 30,
+//     Scale4: 40,
+//     ScaleHive: 50,
+//     HiveTemp: 60,
+//     InsideTemp: 70,
+//     OutsideTemp: 80,
+//     HiveHumidity: 90,
+//     InsideHumidity: 100,
+//     OutsideHumidity: 110
+// };
 
+// const trailerId = 'Trailer1';
+
+// await writeSensorData(sensorData, trailerId);
