@@ -123,7 +123,7 @@ app.post('/receiveData', async (req, res) => {
     const data = req.body;
     await writeSensorData(data, data.TrailerId);
     res.status(200).json({ message: "Data received successfully!" });
-  } 
+  }
   catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -159,7 +159,17 @@ app.post("/users/new/user", authenticateToken, async (req, res) => {
   res.json({ message: "User created successfully!" });
 });
 
-//Add edit and delete user handling here with transactions!
+app.put("/users/edit/user", authenticateToken, async (req, res) => {
+  const user = req.body;
+  await editUser(user.Id, user.Email, user.Password, user.FirstName, user.LastName, user.RoleId);
+  res.json({ message: "User edited successfully!" });
+});
+
+app.delete("/users/delete/user/:Id", authenticateToken, async (req, res) => {
+  const userId = req.params.Id;
+  await deleteUser(userId);
+  res.json({ message: "User deleted successfully!" });
+});
 
 // app.get("/*", (req, res) => {
 //   res.sendFile(__dirname + "/build/index.html");
