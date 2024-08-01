@@ -1,4 +1,4 @@
-import mqtt from "mqtt";
+import mqtt from 'mqtt';
 import { createClient } from 'redis';
 
 const redisClient = createClient();
@@ -11,46 +11,64 @@ redisClient.on('error', (error) => {
     console.error("Redis error: " + error);
 });
 
-redisClient.on('ready', () => {
-    const client = mqtt.connect('mqtt://localhost:1883');
+const mqttClient = mqtt.connect('mqtt://localhost:1883');
+let timer = null;
+const aggregationInterval = 10 * 60 * 1000; // 10 minutes in milliseconds
+const cacheExpiration = 30 * 60; // 30 minutes in seconds
 
-    client.on('connect', () => {
-        console.log('Connected to MQTT!');
+mqttClient.on('connect', () => {
+    console.log('Connected to MQTT!');
+    mqttClient.subscribe('Trailer1/sensors', (err) => {
+        if (err) {
+            console.error("Error subscribing to topic: " + err);
+        }
+    });
+});
+
+mqttClient.on('message', async (topic, message) => {
+    const data = JSON.parse(message.toString());
+    const keys = Object.keys(data);
+
+    for (const key of keys) {
+        const value = data[key];
         try {
-            client.subscribe('Trailer1/sensors');
+            await redisClient.setEx(String(key), cacheExpiration, String(value));
+        } catch (error) {
+            console.error("Redis error when setting key-value pair: " + error);
         }
-        catch (err) {
-            console.error("Error connecting to redis " + err);
-        }
-    });
+    }
 
-    client.on('message', async (topic, message) => {
-        const data = JSON.parse(message.toString());
-        const keys = Object.keys(data);
-
-        for (const key of keys) {
-            const value = data[key];
-
+    if (timer === null) {
+        timer = setTimeout(async () => {
             try {
-                await redisClient.set(String(key), value, 'EX', 1800);
+                const sensorData = await getAllSensorData();
+                console.log('Aggregated Sensor Data:', sensorData);
+
+                // Send aggregated data to the API
+
+                // Clear Redis database
+                await redisClient.flushAll();
+                console.log('Redis database cleared for next set of data.');
+
+            } catch (error) {
+                console.error("Error during aggregation and sending operation: " + error);
+            } finally {
+                timer = null; // Reset the timer
             }
-            catch (error) {
-                console.error("Redis error when setting kvp: " + error);
-            }
-        }
-    });
+        }, aggregationInterval);
+    }
+});
 
-    client.on('error', (error) => {
-        console.error("MQTT error: " + error);
-    });
+mqttClient.on('error', (error) => {
+    console.error("MQTT error: " + error);
+});
 
-    client.on('close', () => {
-        console.log('Disconnected from MQTT broker');
-    });
+mqttClient.on('close', () => {
+    console.log('Disconnected from MQTT broker');
+});
 
-    client.on('offline', () => {
-        console.log('Sensor is offline');
-    });
+mqttClient.on('offline', () => {
+    console.log('MQTT client is offline');
 });
 
 const getAllSensorData = async () => {
@@ -64,17 +82,10 @@ const getAllSensorData = async () => {
         }
 
         return sensorData;
-    }
-    catch (error) {
+    } catch (error) {
         console.error("Error retrieving sensor data from Redis: " + error);
         return {};
     }
 };
 
-
-setTimeout(async () => {
-    const sensorData = await getAllSensorData();
-    console.log(sensorData);
-}, 5000);
-
-await redisClient.connect();
+redisClient.connect().catch(console.error);
