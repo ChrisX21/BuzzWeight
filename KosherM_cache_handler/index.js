@@ -44,16 +44,26 @@ mqttClient.on('message', async (topic, message) => {
                 const sensorData = await getAllSensorData();
                 console.log('Aggregated Sensor Data:', sensorData);
 
-                // Send aggregated data to the API
-
-                // Clear Redis database
-                await redisClient.flushAll();
-                console.log('Redis database cleared for next set of data.');
+                // Send aggregated data to the API with fetch
+                const response = await fetch('http://localhost:8080/api/getData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sensorData)
+                });
+                if (response.status === 200) {
+                    await redisClient.flushAll();
+                    console.log('Redis database cleared for next set of data.');
+                }
+                else {
+                    console.error('API could not process the data. Status:', response.status);
+                }
 
             } catch (error) {
                 console.error("Error during aggregation and sending operation: " + error);
             } finally {
-                timer = null; // Reset the timer
+                timer = null;
             }
         }, aggregationInterval);
     }

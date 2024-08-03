@@ -118,7 +118,7 @@ app.get("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-app.post('/receiveData', async (req, res) => {
+app.post('/api/getData', async (req, res) => {
   try {
     const data = req.body;
     await writeSensorData(data, data.TrailerId);
