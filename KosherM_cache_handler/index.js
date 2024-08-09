@@ -25,7 +25,7 @@ mqttClient.on('connect', () => {
     });
 });
 
-mqttClient.on('message', async (topic, message) => {
+mqttClient.on('message', async (message) => {
     const data = JSON.parse(message.toString());
     const keys = Object.keys(data);
 
@@ -45,6 +45,9 @@ mqttClient.on('message', async (topic, message) => {
                 console.log('Aggregated Sensor Data:', sensorData);
 
                 // Send aggregated data to the API with fetch
+
+                //Change Later!!!! -> technical debt finna be crazy :>
+                sensorData.TrailerId = 'Trailer1';
                 const response = await fetch('http://localhost:8080/api/getData', {
                     method: 'POST',
                     headers: {
@@ -98,4 +101,4 @@ const getAllSensorData = async () => {
     }
 };
 
-redisClient.connect().catch(console.error);
+redisClient.connect();
