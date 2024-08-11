@@ -9,11 +9,13 @@ function Dashboard() {
             <Header />
             <Wrapper>
                 <h1>Dashboard</h1>
-                <Buttons to={"/dashboard/1"}>Trailer 1</Buttons>
-                <Buttons to={"/dashboard/2"}>Trailer 2</Buttons>
-                <Buttons to={"/dashboard/3"}>Trailer 3</Buttons>
-                <Buttons to={"/dashboard/4"}>Trailer 4</Buttons>
-                <Buttons to={"/dashboard/5"}>Trailer 5</Buttons>
+                <ButtonGroup>
+                    <Buttons to={"/dashboard/1"}>Trailer 1</Buttons>
+                    <Buttons to={"/dashboard/2"}>Trailer 2</Buttons>
+                    <Buttons to={"/dashboard/3"}>Trailer 3</Buttons>
+                    <Buttons to={"/dashboard/4"}>Trailer 4</Buttons>
+                    <Buttons to={"/dashboard/5"}>Trailer 5</Buttons>
+                </ButtonGroup>
             </Wrapper>
         </>
     )
@@ -21,19 +23,45 @@ function Dashboard() {
 
 const Wrapper = styled.div`
     text-align: center;
-    margin-left: 9rem;
-    margin-right: 9rem;
-    margin-top: 4rem;
-    padding-bottom: 6rem;
-    padding-top: 2rem;
-    margin-bottom: 5rem;
+    margin: 4rem 9rem 5rem;
+    padding: 2rem 0 6rem;
     border-radius: 2rem;
     background-color: #f0f0f0;
-    position: relative;
 
-    h1{
-        margin-bottom: 9rem;
+    h1 {
+        margin-bottom: 6rem;
         font-size: 4rem;
+
+        @media (max-width: 768px) {
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        margin: 2rem;
+        padding: 2rem;
+    }
+
+    @media (max-width: 480px) {
+        margin: 1rem;
+        padding: 1rem;
+    }
+`
+
+const ButtonGroup = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
     }
 `
 
@@ -44,13 +72,28 @@ const Buttons = styled(Link)`
     border-radius: 1rem;
     font-size: 1.7rem;
     font-weight: 500;
-    margin: 2rem 2rem;
+    margin: 1rem;
     color: black;
     background-color: #e9ab17;
 
     &:hover {
         color: white;
-        transition: 0.3s, out;
+        transition: 0.3s;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        width: 80%;
+        text-align: center;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 1.2rem;
+        padding: 1rem;
+        width: 100%;
     }
 `
-export default Dashboard
+
+export default Dashboard;

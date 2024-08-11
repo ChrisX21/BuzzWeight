@@ -13,7 +13,7 @@ redisClient.on('error', (error) => {
 
 const mqttClient = mqtt.connect('mqtt://localhost:1883');
 let timer = null;
-const aggregationInterval = 10 * 60 * 1000; // 10 minutes in milliseconds
+const aggregationInterval = 0.2 * 60 * 1000; // 10 minutes in milliseconds
 const cacheExpiration = 30 * 60; // 30 minutes in seconds
 
 mqttClient.on('connect', () => {
@@ -25,7 +25,7 @@ mqttClient.on('connect', () => {
     });
 });
 
-mqttClient.on('message', async (message) => {
+mqttClient.on('message', async (topic, message) => {
     const data = JSON.parse(message.toString());
     const keys = Object.keys(data);
 
@@ -44,10 +44,7 @@ mqttClient.on('message', async (message) => {
                 const sensorData = await getAllSensorData();
                 console.log('Aggregated Sensor Data:', sensorData);
 
-                // Send aggregated data to the API with fetch
-
-                //Change Later!!!! -> technical debt finna be crazy :>
-                sensorData.TrailerId = 'Trailer1';
+                sensorData.TrailerId = 1;
                 const response = await fetch('http://localhost:8080/api/getData', {
                     method: 'POST',
                     headers: {

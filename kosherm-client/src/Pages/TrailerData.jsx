@@ -30,6 +30,11 @@ const Title = styled.h1`
     text-align: center;
     margin: 2rem;
     font-size: 3rem;
+
+    @media (max-width: 768px) {
+        font-size: 2rem;
+        margin: 1rem;
+    }
 `
 const SreturnButton = styled(Link)`
     display: block;
@@ -49,6 +54,12 @@ const SreturnButton = styled(Link)`
     &:hover {
         color: white;
         transition: 0.3s, out;
+    }
+
+    @media (max-width: 768px) {
+        width: 30%;
+        padding: 0.5rem;
+        font-size: 1rem;
     }
 `
 

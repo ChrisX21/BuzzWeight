@@ -7,6 +7,8 @@ import Users from './Users';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import NotFound from './NotFound';
 import TrailerData from './TrailerData';
+import CreateUser from './CreateUser';
+import EditUser from './EditUser';
 
 function Pages() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,7 +17,7 @@ function Pages() {
     useEffect(() => {
         const isTokenValid = async () => {
             try {
-                const response = await fetch('/auth');
+                const response = await fetch('/api/auth');
                 const data = await response.json();
                 if (data.authenticated) {
                     setIsLoggedIn(true);
@@ -44,7 +46,13 @@ function Pages() {
                     </>
                 )}
 
-                {isAdmin && <Route path="/users" element={<Users />} />}
+                {isAdmin && (
+                    <>
+                        <Route path="/users" element={<Users />} />
+                        <Route path='users/new/user' element={<CreateUser />} />
+                        <Route path='users/edit/:id' element={<EditUser />} />
+                    </>
+                )}
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>

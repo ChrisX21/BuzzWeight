@@ -5,8 +5,16 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { getUserByEmail, getLatestSensorDataForTrailer, getSensorDataForTrailer, getAllUsers, createUser } from './services/userDatabaseService.js';
+import {
+  getUserByEmail,
+  deleteUser,
+  editUser,
+  createUser,
+  getAllUsers,
+  getUserById
+} from './services/userDatabaseService.js';
 import { getLatestSensorData } from './services/queryInfluxService.js';
+import { writeSensorData } from './services/writeInfluxService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,6 +38,7 @@ const formatDate = (date) => {
   };
   return new Date(date).toLocaleString('en-GB', options);
 };
+
 const authenticateToken = (req, res, next) => {
   const accessToken = req.cookies.accessToken;
 
@@ -57,27 +66,28 @@ const authenticateToken = (req, res, next) => {
           req.user = refreshUser;
           next();
         });
-      }
-      else {
+      } else {
         return res.sendStatus(403);
       }
-    }
-    else {
+    } else {
       req.user = user;
       next();
     }
   });
 };
+
 const generateAccessToken = (user) => {
   delete user.exp;
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };
+
 const generateRefreshToken = (user) => {
   delete user.exp;
   return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 };
 
-app.post("/login", async (req, res) => {
+// API routes
+app.post("/api/login", async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const { email, password } = req.body;
 
@@ -96,46 +106,44 @@ app.post("/login", async (req, res) => {
       res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
       return res.status(200).json({ message: "Login successful!" });
-    }
-    else {
+    } else {
       return res.json({ message: "Invalid Password!" });
     }
-  }
-  catch (err) {
+  } catch (err) {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
 
-app.get('/auth', authenticateToken, (req, res) => {
+app.get('/api/auth', authenticateToken, (req, res) => {
   const authenticated = true;
-  const admin = req.user.RoleId === 3 || req.user.RoleId === 1;
+  const admin = req.user.RoleId === 1;
   res.json({ authenticated, admin });
 });
 
-app.get("/logout", (req, res) => {
+app.get("/api/logout", (req, res) => {
   res.clearCookie('accessToken');
   res.clearCookie('refreshToken');
   res.json({ message: "Logged out successfully" });
 });
 
-app.post('/api/getData', async (req, res) => {
+app.post('/api/getData', (req, res) => {
   try {
     const data = req.body;
-    await writeSensorData(data, data.TrailerId);
+
+    writeSensorData(data, data.TrailerId);
     res.status(200).json({ message: "Data received successfully!" });
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
-app.get("/dashboard/:Id", authenticateToken, async (req, res) => {
+app.get("/api/dashboard/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
   const sensorData = await getLatestSensorData(trailerId);
   res.json({ sensorData });
 });
 
-app.get("/dashboard/export/:Id", authenticateToken, async (req, res) => {
+app.get("/api/dashboard/export/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
   const sensorData = await getLatestSensorData(trailerId);
 
@@ -148,32 +156,46 @@ app.get("/dashboard/export/:Id", authenticateToken, async (req, res) => {
   res.send(csv);
 });
 
-app.get("/users", authenticateToken, async (req, res) => {
+app.get("/api/users", authenticateToken, async (req, res) => {
   const users = await getAllUsers();
-  res.json(users.map(user => ({ Id: user.Id, FirstName: user.FirstName, LastName: user.LastName, Email: user.Email, Role: user.Name, CreatedOn: formatDate(user.CreatedOn) })));
+  res.json(users.map(user => ({
+    Id: user.Id,
+    FirstName: user.FirstName,
+    LastName: user.LastName,
+    Email: user.Email,
+    Role: user.Name,
+    CreatedOn: formatDate(user.CreatedOn)
+  })));
 });
 
-app.post("/users/new/user", authenticateToken, async (req, res) => {
+app.get("/api/users/:Id", authenticateToken, async (req, res) => {
+  const userId = req.params.Id;
+  const user = await getUserById(userId);
+  res.json(user);
+});
+
+app.post("/api/users/new/user", authenticateToken, async (req, res) => {
   const user = req.body;
-  await createUser(user.Email, user.Password, user.FirstName, user.LastName, user.RoleId);
+  await createUser(user.email, user.password, user.firstName, user.lastName, user.roleId);
   res.json({ message: "User created successfully!" });
 });
 
-app.put("/users/edit/user", authenticateToken, async (req, res) => {
+app.put("/api/users/edit", authenticateToken, async (req, res) => {
   const user = req.body;
   await editUser(user.Id, user.Email, user.Password, user.FirstName, user.LastName, user.RoleId);
   res.json({ message: "User edited successfully!" });
 });
 
-app.delete("/users/delete/user/:Id", authenticateToken, async (req, res) => {
+app.delete("/api/users/delete/user/:Id", authenticateToken, async (req, res) => {
   const userId = req.params.Id;
   await deleteUser(userId);
   res.json({ message: "User deleted successfully!" });
 });
 
-// app.get("/*", (req, res) => {
-//   res.sendFile(__dirname + "/build/index.html");
-// })
+
+// app.get('/*', (req, res) => {
+//   res.sendFile(__dirname + '/build/index.html');
+// });
 
 app.listen(8080, () => {
   console.log("Server is running on port 8080");

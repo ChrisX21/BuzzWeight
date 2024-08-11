@@ -10,7 +10,7 @@ function Header() {
     const logOut = async () => {
         if (window.confirm("Are you sure you want to Log out?")) {
             <Navigate to={"/"} />
-            await fetch("/logout");
+            await fetch("/api/logout");
             window.location.reload();
         }
     }
@@ -38,7 +38,7 @@ function Header() {
     useEffect(() => {
         const isTokenValid = async () => {
             try {
-                const response = await fetch('/auth');
+                const response = await fetch('/api/auth');
                 const data = await response.json();
                 setIsLoggedIn(data.authenticated);
                 setIsAdmin(data.admin);

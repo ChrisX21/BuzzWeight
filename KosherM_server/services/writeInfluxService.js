@@ -26,17 +26,17 @@ export const writeSensorData = async (sensorData, trailerId) => {
 }
 
 // const sensorData = {
-//     Scale1: 10,
-//     Scale2: 20,
-//     Scale3: 30,
-//     Scale4: 40,
-//     ScaleHive: 50,
-//     HiveTemp: 60,
-//     InsideTemp: 70,
-//     OutsideTemp: 80,
-//     HiveHumidity: 90,
-//     InsideHumidity: 100,
-//     OutsideHumidity: 110
+//     scale1: 212,
+//     scale2: 220,
+//     scale3: 200,
+//     scale4: 200,
+//     scaleH: 89,
+//     temp1: 33,
+//     temp2: 32,
+//     temp3: 30,
+//     hum1: 90,
+//     hum2: 76,
+//     hum3: 80
 // };
 
 // const trailerId = 'Trailer1';

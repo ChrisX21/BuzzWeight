@@ -7,6 +7,10 @@ const ContactContainer = styled.div`
     justify-content: center;
     align-items: center;
     height: 60vh;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `;
 
 const ContactCard = styled.div`
@@ -19,6 +23,12 @@ const ContactCard = styled.div`
 
     h2 {
         margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        width: 300px;
+        margin-bottom: 2rem;
+        margin-right: 0;
     }
 `;
 

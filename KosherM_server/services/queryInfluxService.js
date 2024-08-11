@@ -12,7 +12,7 @@ const queryApi = new InfluxDB(
 
 export const getLatestSensorData = async (trailerId) => {
     const query = `from(bucket: "${process.env.INFLUXDB_BUCKET}")
-    |> range(start: -30d)
+    |> range(start: -6h)
     |> filter(fn: (r) => r["_measurement"] == "sensors" and r["trailerId"] == "${trailerId}")
     |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
   `;

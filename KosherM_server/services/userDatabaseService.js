@@ -23,8 +23,13 @@ export async function getUserByEmail(email) {
   return rows[0];
 };
 
+export async function getUserById(userId) {
+  const [rows] = await pool.query(`SELECT * FROM Users WHERE Id=?`, [userId]);
+  return rows[0];
+}
+
 export async function createUser(email, password, firstName, lastName, roleId) {
-  await pool.query(`INSERT INTO Users VALUES (DEFAULT, ?, ?, ?, ?, ?)`, [email, password, firstName, lastName, roleId]);
+  await pool.query(`INSERT INTO Users VALUES (DEFAULT, ?, ?, ?, ?, ?, DEFAULT)`, [email, password, firstName, lastName, roleId]);
   return getUserByEmail(email);
 }
 
@@ -33,14 +38,10 @@ export async function getAllUsers() {
   return rows;
 }
 
-export async function getLatestSensorDataForTrailer(trailerId) {
-  const sql = `SELECT * FROM Sensors WHERE TrailerId = ? ORDER BY Sensors.Date DESC LIMIT 6;`
-  const [rows] = await pool.query(sql, [trailerId]);
-  return rows;
+export async function deleteUser(userId) {
+  await pool.query(`DELETE FROM Users WHERE Id=?`, [userId]);
 }
 
-export async function getSensorDataForTrailer(trailerId) {
-  const sql = `SELECT * FROM Sensors WHERE TrailerId = ? ORDER BY Sensors.Date DESC;`
-  const [rows] = await pool.query(sql, [trailerId]);
-  return rows;
+export async function editUser(userId, email, password, firstName, lastName, roleId) {
+  await pool.query(`UPDATE Users SET Email=?, Password=?, FirstName=?, LastName=?, RoleId=? WHERE Id=?`, [email, password, firstName, lastName, roleId, userId]);
 }

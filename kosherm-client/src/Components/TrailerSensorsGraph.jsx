@@ -21,7 +21,7 @@ function TrailerSensorsGraph() {
     useEffect(() => {
         const fetchSensorData = async () => {
             try {
-                const response = await fetch(`/dashboard/${id}`);
+                const response = await fetch(`/api/dashboard/${id}`);
                 const data = await response.json();
                 setSensorData(data.sensorData);
                 setLoading(false);
@@ -143,6 +143,11 @@ const SLine = styled(Line)`
             border-radius: 1rem;
             border: 3px solid #e9ab17;
             position: relative;
+
+            @media (max-width: 768px) {
+                margin: 2rem;
+                padding: 0.3rem;
+            }
             `;
 
 export default TrailerSensorsGraph
