@@ -26,6 +26,10 @@ const Wrapper = styled.div`
     padding: 2rem;
     width: 50%;
     background-color: #f0f0f0;
+
+    @media (max-width: 768px) {
+        width: 80%;
+    }
 `;
 
 const Title = styled.h1`
@@ -54,6 +58,11 @@ const ReturnButton = styled(Link)`
 
     &:hover {
         color: white;
+    }
+
+    @media (max-width: 768px) {
+        width: 50%;
+        padding: 0.5rem;
     }
 `;
 

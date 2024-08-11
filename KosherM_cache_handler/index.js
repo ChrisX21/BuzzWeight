@@ -13,7 +13,7 @@ redisClient.on('error', (error) => {
 
 const mqttClient = mqtt.connect('mqtt://localhost:1883');
 let timer = null;
-const aggregationInterval = 0.2 * 60 * 1000; // 10 minutes in milliseconds
+const aggregationInterval = 10 * 60 * 1000; // 10 minutes in milliseconds
 const cacheExpiration = 30 * 60; // 30 minutes in seconds
 
 mqttClient.on('connect', () => {
