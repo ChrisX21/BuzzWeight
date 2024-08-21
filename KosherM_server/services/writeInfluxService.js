@@ -22,23 +22,22 @@ export const writeSensorData = async (sensorData, trailerId) => {
     });
 
     writeApi.writePoint(point);
-    await writeApi.close();
 }
 
 // const sensorData = {
-//     scale1: 212,
-//     scale2: 220,
-//     scale3: 200,
-//     scale4: 200,
-//     scaleH: 89,
-//     temp1: 33,
-//     temp2: 32,
-//     temp3: 30,
-//     hum1: 90,
-//     hum2: 76,
-//     hum3: 80
+//     scale1: 224,
+//     scale2: 221,
+//     scale3: 232,
+//     scale4: 213,
+//     scaleH: 123,
+//     temp1: 31,
+//     temp2: 30,
+//     temp3: 29,
+//     hum1: 42,
+//     hum2: 46,
+//     hum3: 47
 // };
 
-// const trailerId = 'Trailer1';
+// const trailerId = '1';
 
 // await writeSensorData(sensorData, trailerId);

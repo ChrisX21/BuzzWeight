@@ -1,7 +1,12 @@
 import mqtt from 'mqtt';
 import { createClient } from 'redis';
+import dotenv from 'dotenv';
 
-const redisClient = createClient();
+dotenv.config();
+
+const redisClient = createClient({
+    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+});
 
 redisClient.on('connect', () => {
     console.log('Connected to Redis!');
@@ -11,14 +16,18 @@ redisClient.on('error', (error) => {
     console.error("Redis error: " + error);
 });
 
-const mqttClient = mqtt.connect('mqtt://localhost:1883');
+const mqttClient = mqtt.connect({
+    host: process.env.MQTT_HOST,
+    port: process.env.MQTT_PORT
+});
+
 let timer = null;
-const aggregationInterval = 10 * 60 * 1000; // 10 minutes in milliseconds
-const cacheExpiration = 30 * 60; // 30 minutes in seconds
+const aggregationInterval = parseInt(process.env.AGGREGATION_INTERVAL, 10);
+const cacheExpiration = parseInt(process.env.CACHE_EXPIRATION, 10);
 
 mqttClient.on('connect', () => {
     console.log('Connected to MQTT!');
-    mqttClient.subscribe('Trailer1/sensors', (err) => {
+    mqttClient.subscribe(process.env.MQTT_TOPIC, (err) => {
         if (err) {
             console.error("Error subscribing to topic: " + err);
         }
@@ -44,14 +53,14 @@ mqttClient.on('message', async (topic, message) => {
                 const sensorData = await getAllSensorData();
                 console.log('Aggregated Sensor Data:', sensorData);
 
-                sensorData.TrailerId = 1;
-                const response = await fetch('http://localhost:8080/api/getData', {
+                sensorData.TrailerId = process.env.TRAILER_ID;
+                const response = await fetch(`${process.env.SERVER_HOST}/api/getData`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(sensorData)
-                });
+                }); 
                 if (response.status === 200) {
                     await redisClient.flushAll();
                     console.log('Redis database cleared for next set of data.');
