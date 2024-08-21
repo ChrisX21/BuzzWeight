@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { Line } from 'react-chartjs-2'
-import { Chart as ChartJS, registerables as chartJSRegisterables, LineElement, CategoryScale, LinearScale, PointElement, Ticks } from 'chart.js';
-import { useParams } from 'react-router-dom';
+import React from 'react';
+import styled from 'styled-components';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, registerables as chartJSRegisterables, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 
 ChartJS.register(
@@ -13,26 +12,7 @@ ChartJS.register(
     ...chartJSRegisterables
 );
 
-function TrailerSensorsGraph() {
-    const { id } = useParams();
-    const [sensorData, setSensorData] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchSensorData = async () => {
-            try {
-                const response = await fetch(`/api/dashboard/${id}`);
-                const data = await response.json();
-                setSensorData(data.sensorData);
-                setLoading(false);
-            }
-            catch (error) {
-                console.log("Error fetching sensor data: ", error);
-            }
-        };
-        fetchSensorData();
-    }, [id]);
-
+function TrailerSensorsGraph({ sensorData }) {
     const formatDataForChart = (data) => {
         if (!data) return null;
 
@@ -70,7 +50,6 @@ function TrailerSensorsGraph() {
             labels,
             datasets
         };
-
     };
 
     const chartData = formatDataForChart(sensorData);
@@ -124,30 +103,27 @@ function TrailerSensorsGraph() {
 
     return (
         <>
-            {loading ? (
-                <div>Loading...</div>
+            {sensorData ? (
+                <SLine data={chartData} options={options} />
             ) : (
-                <SLine
-                    data={chartData}
-                    options={options}
-                ></SLine>
+                <div>Loading...</div>
             )}
         </>
     );
 }
 
 const SLine = styled(Line)`
-            margin: 2rem 10rem;
-            padding: 2rem;
-            margin-top: 4rem;
-            border-radius: 1rem;
-            border: 3px solid #e9ab17;
-            position: relative;
+    margin: 2rem 10rem;
+    padding: 2rem;
+    margin-top: 4rem;
+    border-radius: 1rem;
+    border: 3px solid #e9ab17;
+    position: relative;
 
-            @media (max-width: 768px) {
-                margin: 2rem;
-                padding: 0.3rem;
-            }
-            `;
+    @media (max-width: 768px) {
+        margin: 2rem;
+        padding: 0.3rem;
+    }
+`;
 
-export default TrailerSensorsGraph
+export default TrailerSensorsGraph;

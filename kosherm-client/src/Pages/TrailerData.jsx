@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useEffect, useState } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { TbArrowBackUp } from "react-icons/tb";
@@ -10,18 +10,86 @@ import TrailerSensorsGraph from '../Components/TrailerSensorsGraph';
 function TrailerData() {
     const { id } = useParams();
 
+    const [sensorData, setSensorData] = useState(null);
+
+    const [selectedDateRange, setSelectedDateRange] = useState({
+        start: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().slice(0, 10),
+        end: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().slice(0, 10)
+    });
+
+    const fetchSensorData = async (start, end) => {
+        try {
+            const response = await fetch(`/api/dashboard/${id}?start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}`);
+            const data = await response.json();
+            setSensorData(data.sensorData);
+        } catch (error) {
+            console.log("Error fetching sensor data: ", error);
+        }
+    };
+
+    useEffect(() => {
+        // Fetch data when the component mounts
+        fetchSensorData(selectedDateRange.start, selectedDateRange.end);
+    }, [id, selectedDateRange.start, selectedDateRange.end]);
+
+    const handleDateChange = (e) => {
+        const { name, value } = e.target;
+        setSelectedDateRange((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const exportData = async (start, end) => {
+        try {
+            const response = await fetch(`/api/dashboard/export/${id}?start=${new Date(start).toISOString()}&end=${new Date(end).toISOString()}`);
+            const data = await response.text();
+            const blob = new Blob([data], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sensorData_${start}_to_${end}.csv`;
+            a.click();
+        } catch (error) {
+            console.log("Error exporting data: ", error);
+        }
+    };
+
     if (id > 5) {
         return <Navigate to="/NotFound" />;
     }
-
     return (
         <>
             <Header />
             <Title>Trailer {id}</Title>
-            <TrailerDataTable />
-            <TrailerSensorsGraph />
-            <TrailerDataGraph />
-            <SreturnButton to='/dashboard'><TbArrowBackUp />   Return to Dashboard</SreturnButton>
+            <Wrapper>
+                <DateRangeForm>
+                    <StyledDateInput
+                        type="date"
+                        name="start"
+                        value={selectedDateRange.start || ''}
+                        onChange={handleDateChange}
+                        placeholder="Start Date"
+                    />
+                    <Separator> - </Separator>
+                    <StyledDateInput
+                        type="date"
+                        name="end"
+                        value={selectedDateRange.end || ''}
+                        onChange={handleDateChange}
+                        placeholder="End Date"
+                    />
+                </DateRangeForm>
+                <ExportButton onClick={() => exportData(selectedDateRange.start, selectedDateRange.end)}>
+                    Export Table
+                </ExportButton>
+            </Wrapper >
+            <TrailerDataTable sensorData={sensorData} />
+            <TrailerSensorsGraph sensorData={sensorData} />
+            <TrailerDataGraph sensorData={sensorData} />
+            <Wrapper>
+                <SreturnButton to='/dashboard'><TbArrowBackUp />   Return to Dashboard</SreturnButton>
+            </Wrapper>
         </>
     );
 }
@@ -36,30 +104,101 @@ const Title = styled.h1`
         margin: 1rem;
     }
 `
-const SreturnButton = styled(Link)`
-    display: block;
-    text-align: center;
-    text-decoration: none;
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    max-width: 100%;
     margin: 0 auto;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    width: 15%;
+
+    @media (max-width: 768px) {
+        padding: 1rem;
+    }
+`;
+
+
+const ExportButton = styled.button`
+    margin-left: 16px;
+    padding: 8px 16px;
+    background-color: #FFD580;
     color: black;
-    padding: 0.2rem;
-    border-radius: 1rem;
-    background-color: #e9ab17;
     border: none;
-    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
 
     &:hover {
-        color: white;
-        transition: 0.3s, out;
+        background-color: #FFC14D;
     }
 
     @media (max-width: 768px) {
-        width: 30%;
-        padding: 0.5rem;
+        margin-left: 0;
+    }
+`;
+
+
+const DateRangeForm = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+
+    @media (max-width: 768px) {
+        flex-direction: row;
+        padding: 1rem;
+    }
+`;
+
+const StyledDateInput = styled.input`
+    flex: 1;
+    padding: 8px;
+    margin: 5px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+
+    @media (max-width: 768px) {
+        margin: 0.5rem;
+        width: 100%;
+    }
+`;
+
+const Separator = styled.div`
+    margin: 0 16px;
+    font-size: 1.2rem;
+
+    @media (max-width: 768px) {
+        margin: 8px 0;
         font-size: 1rem;
+    }
+`;
+
+const SreturnButton = styled(Link)`
+    margin-left: 16px;
+    padding: 8px 16px;
+    background-color: #FFD580;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    
+
+    &:hover {
+        background-color: #FFC14D;
+    }
+
+    @media (max-width: 768px) {
+        margin-left: 0;
+        margin-top: 10px;
     }
 `
 

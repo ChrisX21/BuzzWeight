@@ -13,7 +13,7 @@ import {
   getAllUsers,
   getUserById
 } from './services/userDatabaseService.js';
-import { getLatestSensorData } from './services/queryInfluxService.js';
+import { getSensorDataByDateRange } from './services/queryInfluxService.js';
 import { writeSensorData } from './services/writeInfluxService.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -139,13 +139,21 @@ app.post('/api/getData', (req, res) => {
 
 app.get("/api/dashboard/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
-  const sensorData = await getLatestSensorData(trailerId);
-  res.json({ sensorData });
+  const { start, end } = req.query;
+
+  try {
+    const sensorData = await getSensorDataByDateRange(trailerId, start, end);
+    res.json({ sensorData });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+  }
 });
 
 app.get("/api/dashboard/export/:Id", authenticateToken, async (req, res) => {
   const trailerId = req.params.Id;
-  const sensorData = await getLatestSensorData(trailerId);
+  const { start, end } = req.query;
+  const sensorData = await getSensorDataByDateRange(trailerId, start, end);
 
   const csv = sensorData.map(data => {
     return `${formatDate(data._time)},${data.scale1}g,${data.scale2}g,${data.scale3}g,${data.scale4}g,${data.scaleH}kg,${data.temp1}°C,${data.temp2}°C,${data.temp3}°C,${data.hum1}%,${data.hum2}%,${data.hum3}%`;
