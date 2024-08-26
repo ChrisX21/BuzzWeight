@@ -1,0 +1,4 @@
+**/node_modules/
+**/.env
+**/build
+# Add any other global ignores here

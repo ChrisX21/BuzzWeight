@@ -22,7 +22,7 @@ HX711_ADC LoadCell(HX711_dout, HX711_sck);
 const int calVal_eepromAdress = 0;
 unsigned long previousReadMillis = 0;
 unsigned long previousSendMillis = 0;
-const long read_interval = 10000;  // 10 seconds
+const long read_interval = 5000;  // 5 seconds
 const long send_interval = 600000; // 10 minutes
 
 float currentWeight = 0; // Variable to store the most recent weight measurement
