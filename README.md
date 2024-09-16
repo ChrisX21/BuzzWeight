@@ -1,1 +1,1 @@
-#BuzzWeight cache handler
+#BuzzWeight root
