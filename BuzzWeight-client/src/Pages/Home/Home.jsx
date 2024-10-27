@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid2 as Grid, Typography, Button, Box } from '@mui/material';
-import Footer from '../../Components/Footer/Footer';
 import styles from './Home.module.css';
 
 function Home() {
@@ -23,7 +22,6 @@ function Home() {
                 </Typography>
             </Grid>
 
-            <Footer />
         </Box>
     );
 }

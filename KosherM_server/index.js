@@ -95,7 +95,7 @@ app.post("/api/login", async (req, res) => {
     const user = await getUserByEmail(email);
 
     if (!user) {
-      return res.json({ message: "Invalid Credentials" });
+      return res.status(401).json({ message: "Invalid Login Attempt" });
     }
 
     if (password === user.Password) {
@@ -105,9 +105,9 @@ app.post("/api/login", async (req, res) => {
       res.cookie('accessToken', accessToken, { httpOnly: true });
       res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
-      return res.status(200).json({ message: "Login successful!" });
+      return res.status(200).json({ message: "Login successful" });
     } else {
-      return res.json({ message: "Invalid Password!" });
+      return res.status(401).json({ message: "Invalid Login Attempt" });
     }
   } catch (err) {
     return res.status(500).json({ message: "Internal server error" });
@@ -117,7 +117,7 @@ app.post("/api/login", async (req, res) => {
 app.get('/api/auth', authenticateToken, (req, res) => {
   const authenticated = true;
   const admin = req.user.RoleId === 1;
-  res.json({ authenticated, admin });
+  res.json({ auth: authenticated, admin: admin });
 });
 
 app.get("/api/logout", (req, res) => {
