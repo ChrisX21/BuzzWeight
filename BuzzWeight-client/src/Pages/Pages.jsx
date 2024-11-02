@@ -6,6 +6,7 @@ import Contact from './Contact/Contact';
 import Login from './Login/Login';
 import Navbar from '../Components/Navbar/Navbar';
 import Dashboard from './Dashboard/Dashboard';
+import DashboardNavbar from '../Components/DashboardNavbar/DashboardNavbar';
 import Footer from '../Components/Footer/Footer';
 import { AuthContext } from '../Auth/AuthContext';
 
@@ -14,7 +15,7 @@ function Pages() {
 
     return (
         <Router>
-            <Navbar />
+            {isLoggedIn ? (<DashboardNavbar />) : <Navbar />}
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path='/contacts' element={<Contact />} />
