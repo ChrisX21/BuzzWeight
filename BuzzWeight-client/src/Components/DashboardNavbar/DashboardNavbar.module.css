@@ -1,11 +1,11 @@
 .sidebar {
-  width: 240px;
+  width: 260px;
   flex-shrink: 0;
   background-color: #fff;
 }
 
 .sidebarPaper {
-  width: 240px;
+  width: 260px;
   box-sizing: border-box;
   background-color: #fff;
 }
@@ -17,13 +17,17 @@
   font-size: 1.5rem;
   font-weight: bold;
   color: black;
+
+  @media(max-width: 768px) {
+    margin-left: 2rem;
+  }
 }
+
 
 .linkTitle:hover {
   color: white;
   transition: 0.3s ease-out;
 }
-
 
 .sidebarHeader {
   padding: 16px;
@@ -53,4 +57,45 @@
 
 .discount {
   color: #e9ab17;
+  font-size: 1rem;
+}
+
+.call {
+  color: #e9ab17;
+  margin-right: 0.3rem;  
+}
+
+.menuIconButton {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1300;
+  color: #e9ab17;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .menuIconButton {
+      display: flex;  
+  }
+  .sidebar {
+      display: none;
+  }
+  
+  .wrapper {
+    background-color: #e9ab17;
+    height: 4.3rem;
+  }
+  
+  .titleWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .title {
+    position: absolute;
+    padding: 0.5rem;
+  }
+  
 }

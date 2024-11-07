@@ -1,14 +1,18 @@
-import React from 'react';
-import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { TiThMenu } from 'react-icons/ti';
 import { Home, Analytics, People, Settings } from '@mui/icons-material';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import { GiTreeBeehive } from 'react-icons/gi';
 import { NavLink, Link } from 'react-router-dom';
 import { AuthContext } from '../../Auth/AuthContext';
+import CallIcon from '@mui/icons-material/Call';
 import styles from './DashboardNavbar.module.css';
+import { CiTextAlignCenter } from 'react-icons/ci';
 
 const DashboardNavbar = () => {
-    const { isAdmin, setIsAdmin } = React.useContext(AuthContext);
+    const { isAdmin } = React.useContext(AuthContext);
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     const menuItems = [
         { text: 'Home', icon: <Home />, path: '/' },
@@ -18,38 +22,90 @@ const DashboardNavbar = () => {
         { text: 'Contact', icon: <AssignmentIndIcon />, path: '/contacts' }
     ];
 
+    const toggleDrawer = () => {
+        setDrawerOpen(!drawerOpen);
+    };
 
     return (
-        <Drawer
-            className={styles.sidebar}
-            variant="permanent"
-            anchor="left"
-            classes={{ paper: styles.sidebarPaper }}
-        >
-            <Box className={styles.sidebarHeader}>
-                <NavLink to="/" className={styles.linkTitle}>
-                    BuzzWeight <GiTreeBeehive />
-                </NavLink>
-            </Box>
+        <>
+            <div className={styles.wrapper}>
+                <div className={styles.titleWrapper}>
+                    <h1 className={styles.title} >Title</h1>
+                </div>
+                <IconButton
+                    color="inherit"
+                    edge="start"
+                    onClick={toggleDrawer}
+                    className={styles.menuIconButton}
+                    sx={{ display: { sm: 'none' } }}
+                >
+                    <TiThMenu />
+                </IconButton>
+            </div>
 
-            <List>
-                {menuItems.map((item) => (
-                    <ListItem key={item.text} disablePadding>
-                        <ListItemButton component={Link} to={item.path} className={styles.menuItem}>
-                            <ListItemIcon className={styles.menuIcon}>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
+            <Drawer
+                className={styles.sidebar}
+                variant="permanent"
+                anchor="left"
+                classes={{ paper: styles.sidebarPaper }}
+                sx={{ display: { xs: 'none', sm: 'block' } }}
+            >
+                <Box className={styles.sidebarHeader}>
+                    <NavLink to="/" className={styles.linkTitle}>
+                        BuzzWeight <GiTreeBeehive />
+                    </NavLink>
+                </Box>
+                <List>
+                    {menuItems.map((item) => (
+                        <ListItem key={item.text} disablePadding>
+                            <ListItemButton component={Link} to={item.path} className={styles.menuItem}>
+                                <ListItemIcon className={styles.menuIcon}>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.text} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+                <Box className={styles.footer}>
+                    <Typography variant="body2" className={styles.footerText}>
+                        In need of support? <br />
+                        <span className={styles.discount}><CallIcon className={styles.call} />+359886262026</span>
+                    </Typography>
+                </Box>
+            </Drawer>
 
-            <Box className={styles.footer}>
-                <Typography variant="body2" className={styles.footerText}>
-                    Plan about to expire? <br />
-                    <span className={styles.discount}>Get the discount</span>
-                </Typography>
-            </Box>
-        </Drawer>
+            <Drawer
+                variant="temporary"
+                open={drawerOpen}
+                onClose={toggleDrawer}
+                classes={{ paper: styles.sidebarPaper }}
+                sx={{ display: { xs: 'block', sm: 'none' } }}
+                ModalProps={{
+                    keepMounted: true,
+                }}
+            >
+                <Box className={styles.sidebarHeader}>
+                    <NavLink to="/" className={styles.linkTitle}>
+                        BuzzWeight <GiTreeBeehive />
+                    </NavLink>
+                </Box>
+                <List>
+                    {menuItems.map((item) => (
+                        <ListItem key={item.text} disablePadding onClick={toggleDrawer}>
+                            <ListItemButton component={Link} to={item.path} className={styles.menuItem}>
+                                <ListItemIcon className={styles.menuIcon}>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.text} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+                <Box className={styles.footer}>
+                    <Typography variant="body2" className={styles.footerText}>
+                        In need of support? <br />
+                        <span className={styles.discount}><CallIcon className={styles.call} />+359886262026</span>
+                    </Typography>
+                </Box>
+            </Drawer>
+        </>
     );
 };
 
