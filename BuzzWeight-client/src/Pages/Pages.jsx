@@ -15,6 +15,7 @@ import Settings from './Settings/Settings';
 function Pages() {
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
     const { isAdmin, setIsAdmin } = useContext(AuthContext);
+
     return (
         <Router>
             {isLoggedIn ? (<DashboardNavbar />) : <Navbar />}
@@ -23,12 +24,12 @@ function Pages() {
                 <Route path='/contacts' element={<Contact />} />
                 {!isLoggedIn && <Route path='/login' element={<Login />} />}
                 {isLoggedIn && <Route path='/dashboard' element={<Dashboard />} />}
-                (isLoggedIn && isAdmin) && {
+                {isLoggedIn && isAdmin && (
                     <>
                         <Route path='/settings' element={<Settings />} />
                         <Route path='/users' element={<Users />} />
                     </>
-                }
+                )}
                 <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />

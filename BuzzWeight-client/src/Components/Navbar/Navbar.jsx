@@ -16,13 +16,6 @@ function Navbar() {
         setMenuVisible(false);
     };
 
-    const logout = () => {
-        window.confirm('Are you sure you want to logout?');
-        fetch('/api/logout', {
-        }).then(() => {
-            window.location.href = '/';
-        });
-    }
 
     return (
         <nav className={styles.navbar}>
@@ -34,13 +27,7 @@ function Navbar() {
 
             <div className={`${styles.menuWrapper} ${menuVisible ? styles.show : ''}`}>
                 <NavLink to="/contacts" className={styles.link} onClick={closeMenu}>Contacts</NavLink>
-                {!isLoggedIn && <NavLink to="/login" className={styles.link} onClick={closeMenu}>Login</NavLink>}
-                {isLoggedIn && (
-                    <>
-                        <NavLink to="/dashboard" className={styles.link} onClick={closeMenu}>Dashboard</NavLink>
-                        <NavLink to="/" className={styles.link} onClick={() => { closeMenu(); logout(); }}>Logout</NavLink>
-                    </>
-                )}
+                <NavLink to="/login" className={styles.link} onClick={closeMenu}>Login</NavLink>
             </div>
         </nav>
     );

@@ -98,4 +98,8 @@
     padding: 0.5rem;
   }
   
+  .logoutButton {
+    margin-top: auto;
+  }
 }
+

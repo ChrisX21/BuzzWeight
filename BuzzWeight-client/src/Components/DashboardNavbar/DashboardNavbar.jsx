@@ -9,6 +9,7 @@ import { AuthContext } from '../../Auth/AuthContext';
 import CallIcon from '@mui/icons-material/Call';
 import styles from './DashboardNavbar.module.css';
 import { CiTextAlignCenter } from 'react-icons/ci';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const DashboardNavbar = () => {
     const { isAdmin } = React.useContext(AuthContext);
@@ -65,6 +66,19 @@ const DashboardNavbar = () => {
                         </ListItem>
                     ))}
                 </List>
+                <ListItem disablePadding onClick={() => {
+                     if (window.confirm('Are you sure you want to logout?')){
+                        fetch('/api/logout', {
+                        }).then(() => {
+                            window.location.href = '/';
+                        });
+                    }
+                }}>
+                    <ListItemButton className={styles.logoutButton}>
+                        <ListItemIcon className={styles.menuIco}><LogoutIcon /></ListItemIcon>
+                        <ListItemText primary="Logout" />
+                    </ListItemButton>
+                </ListItem>
                 <Box className={styles.footer}>
                     <Typography variant="body2" className={styles.footerText}>
                         In need of support? <br />
@@ -98,6 +112,19 @@ const DashboardNavbar = () => {
                         </ListItem>
                     ))}
                 </List>
+                <ListItem disablePadding onClick={() => {
+                    if (window.confirm('Are you sure you want to logout?')){
+                        fetch('/api/logout', {
+                        }).then(() => {
+                            window.location.href = '/';
+                        });
+                    }
+                }}>
+                    <ListItemButton className={styles.logoutButton}>
+                        <ListItemIcon className={styles.menuIco}><LogoutIcon /></ListItemIcon>
+                        <ListItemText primary="Logout" />
+                    </ListItemButton>
+                </ListItem>
                 <Box className={styles.footer}>
                     <Typography variant="body2" className={styles.footerText}>
                         In need of support? <br />
