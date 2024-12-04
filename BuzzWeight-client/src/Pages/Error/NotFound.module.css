@@ -1,0 +1,93 @@
+.returnButton {
+    padding: 0.7rem 1rem;
+    background-color: #e9ab17;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    margin-top: 1rem;
+
+    &:hover {
+        color: white;
+        transition: 0.3s;
+    }
+}
+
+.notFoundText{
+    font-size: 15rem;
+    color: #e9ab17;
+    font-weight: bold;
+
+    @media (max-width: 768px) {
+        font-size: 8rem;
+    }
+}
+
+.notFoundMessage{
+    font-size: 2rem;
+    color: black;
+    text-align: center;
+    margin-top: 0rem;
+
+    @media (max-width: 768px) {
+        font-size: 1.2rem;
+    }
+}
+
+.styledIcon{
+    vertical-align: middle;
+    margin-right: 0.2rem;
+}
+
+.mainContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        z-index: 1;
+    }
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    gap: 16px;
+    height: 60vh;
+    width: 100vh;
+    margin-top: 3rem;
+    border-radius: 0.5rem;
+    background-color: #f0f0f0;
+    box-shadow: hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px,
+        hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px;
+    position: relative;
+
+    @media (max-width: 768px) {
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        z-index: 1;
+    }
+}
+
+.container::before {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background-image: radial-gradient(
+        ellipse at 50% 50%,
+        hsl(210, 100%, 97%),
+        hsl(0, 0%, 100%)
+    );
+    background-repeat: no-repeat;
+    border-radius: inherit; 
+}
