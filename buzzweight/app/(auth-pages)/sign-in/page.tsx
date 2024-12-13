@@ -8,16 +8,15 @@ import Link from "next/link";
 export default async function Login(props: { searchParams: Promise<Message> }) {
   const searchParams = await props.searchParams;
   return (
-    <form className="flex-1 flex flex-col min-w-64">
-      <h1 className="text-2xl font-medium">Sign in</h1>
-      <p className="text-sm text-foreground">
-        Don't have an account?{" "}
-        <Link className="text-foreground font-medium underline" href="/sign-up">
-          Sign up
-        </Link>
-      </p>
-      <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
-        <Label htmlFor="email">Email</Label>
+    <div className="flex flex-col items-center justify-center gap-2 p-10 mb-10">
+    <h1 className="text-2xl font-medium text-center text-foreground mb-4">Welcome back!</h1>
+    <div className="border rounded-lg border-grey w-full h-full flex justify-center items-center shadow-lg shadow-grey">
+      <div className="flex flex-col items-center justify-center gap-2 p-10">
+      <h1 className="text-2xl font-medium text-center">Sign in</h1>
+      </div>
+      <form className="flex-1 flex flex-col min-w-64 p-10">
+        <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
+          <Label htmlFor="email">Email</Label>
         <Input name="email" placeholder="you@example.com" required />
         <div className="flex justify-between items-center">
           <Label htmlFor="password">Password</Label>
@@ -34,11 +33,13 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           placeholder="Your password"
           required
         />
-        <SubmitButton pendingText="Signing In..." formAction={signInAction}>
+        <SubmitButton className="hover:bg-[#e9ab17]" pendingText="Signing In..." formAction={signInAction}>
           Sign in
         </SubmitButton>
         <FormMessage message={searchParams} />
       </div>
     </form>
+    </div>
+    </div>
   );
 }
