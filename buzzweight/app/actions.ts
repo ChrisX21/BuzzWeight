@@ -50,7 +50,14 @@ export const signInAction = async (formData: FormData) => {
   });
 
   if (error) {
-    return encodedRedirect("error", "/sign-in", error.message);
+    switch (error.message) {
+      case "Invalid login credentials":
+        return encodedRedirect("error", "/sign-in", "Invalid email or password");
+      case "Email not confirmed":
+        return encodedRedirect("error", "/sign-in", "Please verify your email first");
+      default:
+        return encodedRedirect("error", "/sign-in", error.message);
+    }
   }
 
   return redirect("/protected");
