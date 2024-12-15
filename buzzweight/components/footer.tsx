@@ -1,11 +1,68 @@
 import React from "react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full flex items-center justify-center border-t mx-auto text-center text-xs gap-8 py-16">
-      <div className="text-center">
-        <p>ToDo:</p>
-        <p>Web and Measurement systems by Kristiyan Aleksiev</p>
+    <footer className="bg-gray-50 border-t w-full mt-auto">
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-4">
+              Company
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/about"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-4">
+              Resources
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Terms of Service
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="pt-8 border-t border-gray-200">
+          <p className="text-sm text-gray-500 text-center">
+            © 2024 Web and Measurement Systems by Kristiyan Aleksiev. All
+            rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );
