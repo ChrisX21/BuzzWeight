@@ -6,6 +6,7 @@ import { useFormStatus } from "react-dom";
 
 type Props = ComponentProps<typeof Button> & {
   pendingText?: string;
+  formAction?: ComponentProps<'form'>['action'];
 };
 
 export function SubmitButton({

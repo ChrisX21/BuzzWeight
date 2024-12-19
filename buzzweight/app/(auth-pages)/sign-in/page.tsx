@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { signInAction } from "@/app/actions";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
@@ -13,11 +14,12 @@ type FormErrors = {
   general: string;
 };
 
-export default function Login(props: { searchParams?: { error?: string } }) {
+export default function Login() {
+  const searchParams = useSearchParams();
   const [errors, setErrors] = useState<FormErrors>({
     email: "",
     password: "",
-    general: "",
+    general: searchParams.get("error") || "",
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -54,24 +56,17 @@ export default function Login(props: { searchParams?: { error?: string } }) {
     }
 
     try {
-      const result = await signInAction(formData);
-      const searchParams = new URLSearchParams(result?.toString() || "");
-      if (searchParams.get("error")) {
-        setErrors((prev) => ({
-          ...prev,
-          general: searchParams.get("error") || "Invalid email or password",
-        }));
-      }
+      await signInAction(formData);
     } catch (error) {
       setErrors((prev) => ({
         ...prev,
-        general: "An error occurred during sign-in",
+        general: "Invalid email or password",
       }));
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 p-10 mb-10">
+    <div className="flex flex-col items-center justify-center gap-2 p-10 mb-10 min-h-60">
       <h1 className="text-2xl font-medium text-center text-foreground mb-4">
         Welcome back!
       </h1>
