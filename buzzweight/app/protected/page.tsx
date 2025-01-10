@@ -1,3 +1,4 @@
+import StartChart from "@/components/line-chart";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -12,12 +13,18 @@ export default async function ProtectedPage() {
     return redirect("/sign-in");
   }
 
+  const sampleData = [
+    { name: "Jan", value: 40 },
+    { name: "Feb", value: 35 },
+    { name: "Mar", value: 50 },
+    { name: "Apr", value: 70 },
+    { name: "May", value: 80 },
+  ];
+
   return (
-    <div>
-      Here will be the dashboard where we will be able to see all analytics for
-      the trailers. When we click the nav menu button to go to a certain
-      trailer, then we will be able to access the more precise information What
-      will be available is a 24hr summary of events{" "}
+    <div className="flex flex-col gap-4 text-center mt-5">
+      <h1 className="text-2xl font-bold">Overview</h1>
+      <StartChart data={sampleData} />
     </div>
   );
 }

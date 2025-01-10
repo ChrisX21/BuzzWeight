@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { type ComponentProps } from "react";
 import { useFormStatus } from "react-dom";
 
-type Props = ComponentProps<typeof Button> & {
+type Props = Omit<ComponentProps<typeof Button>, 'formAction'> & {
   pendingText?: string;
-  formAction?: ComponentProps<'form'>['action'];
+  formAction?: (formData: FormData) => Promise<any>;
 };
 
 export function SubmitButton({

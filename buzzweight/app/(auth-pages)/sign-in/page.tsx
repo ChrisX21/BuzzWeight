@@ -97,12 +97,6 @@ export default function Login() {
           <div className="flex flex-col gap-1">
             <div className="flex justify-between items-center">
               <Label htmlFor="password">Password</Label>
-              <Link
-                href="/forgot-password"
-                className="text-xs text-foreground underline"
-              >
-                Forgot Password?
-              </Link>
             </div>
             <Input
               id="password"
@@ -121,6 +115,13 @@ export default function Login() {
                 {errors.password}
               </p>
             )}
+
+            <Link
+              href="/forgot-password"
+              className="text-xs text-foreground underline mt-2 mb-2 text-right w-full"
+            >
+              Forgot Password?
+            </Link>
           </div>
 
           {errors.general && (
