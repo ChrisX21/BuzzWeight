@@ -1,6 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
+import { aggregateSensorData } from "../utils";
 
-export async function getSensorDataByDateRange(trailerId: number, startTime?: string, endTime?: string) {
+export async function getSensorDataByDateRange(
+    trailerId: number,
+    startTime?: string,
+    endTime?: string
+) {
     const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -22,6 +27,7 @@ export async function getSensorDataByDateRange(trailerId: number, startTime?: st
         throw error;
     }
 
-    return data;
-      }
-      
+    // Aggregate the data
+    return aggregateSensorData(data);
+}
+
