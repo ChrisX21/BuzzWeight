@@ -3,9 +3,9 @@
 import SensorsTable from "@/components/sensors-table";
 import React, { useEffect, useState } from "react";
 import DateRangePicker from "@/components/date-range-picker";
-import HiveChart from "@/components/hive-chart";
-import ScalesChart from "@/components/scales-chart";
 import DashboardCharts from "@/components/dashboard-charts";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface SensorData {
   sensorData: {
@@ -24,6 +24,28 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
     new Date(Date.now() - 24 * 60 * 60 * 1000),
     new Date(),
   ]);
+
+  async function handleExportClick() {
+    const response = await fetch(
+      `/api/dashboard/export/${id}?start=${dateRange[0]?.toISOString()}&end=${dateRange[1]?.toISOString()}`
+    );
+
+    if (!response.ok) {
+      console.error("Export failed:", response.statusText);
+      alert("Export failed. Please try again.");
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `export_${id}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  }
 
   useEffect(() => {
     if (id && dateRange[0] && dateRange[1]) {
@@ -70,6 +92,20 @@ export default function DashboardPage({ params }: { params: { id: string } }) {
       <SensorsTable sensorData={data.sensorData} />
       <div className="mt-8 flex justify-center text-center">
         <DashboardCharts data={data} />
+      </div>
+      <div className="mt-5">
+        <Link
+          href="/"
+          className="shadow-lg text-center rounded-lg align-middle bg-gray-900 hover:bg-[#e9ab17] transition delay-3 text-white p-2 mr-5"
+        >
+          Return to Overview
+        </Link>
+        <Button
+          onClick={handleExportClick}
+          className="shadow-lg text-center rounded-lg align-middle bg-gray-900 hover:bg-[#e9ab17] transition delay-3 text-white p-2"
+        >
+          Export Data
+        </Button>
       </div>
     </div>
   );
