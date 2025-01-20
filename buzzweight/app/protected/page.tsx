@@ -1,7 +1,7 @@
 import OverviewChart from "@/components/overview-chart";
+import OverviewTempsChart from "@/components/overview-temps-chart";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -20,7 +20,14 @@ export default async function ProtectedPage() {
       <p>
         Welcome back, <b>{user.email}</b>!
       </p>
-      <div><OverviewChart /></div>
+      <div>
+        <h3 className="mt-5">Pollen Scales Overview (24hrs)</h3>
+        <OverviewChart />
+      </div>
+      <div>
+        <h3 className="mt-5">Temperature Overview (24hrs)</h3>
+        <OverviewTempsChart />
+      </div>
     </div>
   );
 }

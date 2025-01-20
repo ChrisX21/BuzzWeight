@@ -60,7 +60,7 @@ export default function OverviewChart() {
           xAxis={[{ scaleType: "band", data: xAxisLabels }]}
           series={chartSeries}
           colors={["#e9ab17", "#4caf50", "#2196f3", "#ff5722", "#e40f0f"]} // Customize colors per trailer
-          width={800}
+          width={1000}
           height={400}
         />
       )}
