@@ -1,5 +1,7 @@
+import OverviewChart from "@/components/overview-chart";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -15,6 +17,10 @@ export default async function ProtectedPage() {
   return (
     <div className="flex flex-col gap-4 text-center mt-5">
       <h1 className="text-2xl font-bold">Overview</h1>
+      <p>
+        Welcome back, <b>{user.email}</b>!
+      </p>
+      <div><OverviewChart /></div>
     </div>
   );
 }

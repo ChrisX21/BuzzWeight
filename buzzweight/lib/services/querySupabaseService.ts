@@ -1,7 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import { aggregateSensorData } from "../utils";
+import { aggregateScalesSensorData, aggregateSensorData } from "../utils";
 
-// Define the type for sensor data
 interface SensorData {
   sensor: string;
   value: number;
@@ -37,3 +36,21 @@ export async function getSensorDataByDateRange(
     return aggregateSensorData(data as SensorData[]);
 }
 
+
+export async function getLatestSensorData(): Promise<SensorData[]> {
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    
+
+    const date = new Date(Date.now() - 1000 * 60 * 60 * 24 * 220).toISOString();
+
+    const {data, error} = await supabase.from('sensors').select('*').gte('created_at', date);
+
+    if (error) {
+        throw error;
+    }
+    //@ts-ignore
+    return aggregateScalesSensorData(data as SensorData[]);
+}
