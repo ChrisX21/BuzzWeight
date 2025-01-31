@@ -1,4 +1,5 @@
 import { Montserrat } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react"
 import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
@@ -43,6 +44,7 @@ export default function RootLayout({
                 </Suspense>
                 <div className="flex flex-col gap-20 max-w-5xl p-5">
                   {children}
+                  <Analytics />
                 </div>
                 <Footer />
               </div>

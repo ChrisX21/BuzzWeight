@@ -17,7 +17,7 @@ export default function Login() {
   const [errors, setErrors] = useState<FormErrors>({
     email: "",
     password: "",
-    general: "An error occurred during sign in.",
+    general: "",
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
