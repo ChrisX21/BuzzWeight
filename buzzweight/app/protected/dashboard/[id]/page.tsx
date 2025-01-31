@@ -15,7 +15,11 @@ interface SensorData {
   }[];
 }
 
-export default function DashboardPage({ params }: { params: { id: string } }) {
+export default function DashboardPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   //@ts-ignore
   const { id } = React.use(params);
   const [loading, setLoading] = useState(true);

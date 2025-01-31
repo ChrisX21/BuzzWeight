@@ -1,6 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { signInAction } from "@/app/actions";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
@@ -15,11 +14,10 @@ type FormErrors = {
 };
 
 export default function Login() {
-  const searchParams = useSearchParams();
   const [errors, setErrors] = useState<FormErrors>({
     email: "",
     password: "",
-    general: searchParams.get("error") || "",
+    general: "An error occurred during sign in.",
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
