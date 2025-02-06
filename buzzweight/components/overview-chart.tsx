@@ -13,10 +13,10 @@ interface AveragedSensorData {
 export default function OverviewChart() {
   const [data, setData] = useState<AveragedSensorData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartSize, setChartSize] = useState({ width: 1000, height: 400 });
 
   useEffect(() => {
     setLoading(true);
-
     fetch(`/api/dashboard/latest`)
       .then((res) => res.json())
       .then((data) => {
@@ -29,14 +29,27 @@ export default function OverviewChart() {
       });
   }, []);
 
+  useEffect(() => {
+    const updateSize = () => {
+      const width = Math.min(window.innerWidth * 0.9, 900);
+      const height = Math.min(window.innerHeight * 0.4, 400);
+      setChartSize({ width, height });
+    };
+
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
+
   // Group data by trailerId
-  const groupedData = data.reduce((acc: Record<number, AveragedSensorData[]>, item) => {
-    if (!acc[item.trailerId]) {
-      acc[item.trailerId] = [];
-    }
-    acc[item.trailerId].push(item);
-    return acc;
-  }, {});
+  const groupedData = data.reduce(
+    (acc: Record<number, AveragedSensorData[]>, item) => {
+      if (!acc[item.trailerId]) acc[item.trailerId] = [];
+      acc[item.trailerId].push(item);
+      return acc;
+    },
+    {}
+  );
 
   // Prepare data for the chart
   const chartSeries = Object.entries(groupedData).map(([trailerId, items]) => ({
@@ -47,21 +60,24 @@ export default function OverviewChart() {
   const xAxisLabels =
     data.length > 0
       ? data
-          .filter((item, index, self) => index === self.findIndex((i) => i.created_at === item.created_at))
+          .filter(
+            (item, index, self) =>
+              index === self.findIndex((i) => i.created_at === item.created_at)
+          )
           .map((item) => formatDate(item.created_at))
       : [];
 
   return (
-    <div className="p-2 shadow-lg rounded-lg">
+    <div className="w-full max-w-screen-lg mx-auto">
       {loading ? (
         <p>Loading...</p>
       ) : (
         <LineChart
           xAxis={[{ scaleType: "band", data: xAxisLabels }]}
           series={chartSeries}
-          colors={["#e9ab17", "#4caf50", "#2196f3", "#ff5722", "#e40f0f"]} // Customize colors per trailer
-          width={1000}
-          height={400}
+          colors={["#e9ab17", "#4caf50", "#2196f3", "#ff5722", "#e40f0f"]}
+          width={chartSize.width}
+          height={chartSize.height}
         />
       )}
     </div>

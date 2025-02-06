@@ -1,5 +1,6 @@
 import { Montserrat } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "next-themes";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
@@ -45,6 +46,7 @@ export default function RootLayout({
                 <div className="flex flex-col gap-20 max-w-5xl p-5">
                   {children}
                   <Analytics />
+                  <SpeedInsights />
                 </div>
                 <Footer />
               </div>

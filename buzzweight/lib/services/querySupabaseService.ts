@@ -43,7 +43,7 @@ export async function getLatestSensorData(): Promise<SensorData[]> {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
-    const date = new Date(Date.now() - 1000 * 60 * 60 * 24 * 220).toISOString();
+    const date = new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString();
 
     const {data, error} = await supabase.from('sensors').select('*').gte('created_at', date);
 
@@ -60,7 +60,7 @@ export async function getLatestTempData(): Promise<SensorData[]> {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
-    const date = new Date(Date.now() - 1000 * 60 * 60 * 24 * 220).toISOString();
+    const date = new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString();
 
     const {data, error} = await supabase.from('sensors').select('*').gte('created_at', date);
 

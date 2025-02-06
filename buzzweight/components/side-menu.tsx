@@ -25,8 +25,8 @@ export default function SideMenu() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 h-full bg-white text-gray-800 shadow-lg transition-all duration-300 ease-in-out
-        ${isOpen ? "w-64" : "w-16"}`}
+      className={`fixed top-0 left-0 h-full text-gray-800 shadow-lg transition-all duration-300 ease-in-out z-40
+      ${isOpen ? "w-64 bg-white" : "w-16 bg-transparent shadow-none"}`}
     >
       <div className="flex flex-col p-5">
         <div className="flex justify-between items-center mb-8">
@@ -45,74 +45,78 @@ export default function SideMenu() {
         </div>
 
         <div className="flex flex-col gap-2">
-          {[
-            {
-              href: "/",
-              icon: <AiOutlineHome className="text-xl" />,
-              label: "Home",
-            },
-            {
-              href: "/protected/settings",
-              icon: <FiSettings className="text-xl" />,
-              label: "Settings",
-            },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors
-                ${!isOpen ? "justify-center" : ""}`}
+          {isOpen
+            ? [
+                {
+                  href: "/",
+                  icon: <AiOutlineHome className="text-xl" />,
+                  label: "Home",
+                },
+                {
+                  href: "/protected/settings",
+                  icon: <FiSettings className="text-xl" />,
+                  label: "Settings",
+                },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors`}
+                >
+                  <div className="min-w-[24px] flex justify-center">
+                    {item.icon}
+                  </div>
+                  <span>{item.label}</span>
+                </Link>
+              ))
+            : null}
+
+          {isOpen && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className={`flex items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors
+                    ${!isOpen ? "justify-center" : ""}`}
+                >
+                  <div className="min-w-[24px] flex justify-center">
+                    <MdHive className="text-xl" />
+                  </div>
+                  <span>Trailers</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side={isOpen ? "bottom" : "right"}
+                className={`mt-2 ${
+                  !isOpen ? "ml-2" : ""
+                } bg-white shadow-lg rounded-lg overflow-hidden`}
+              >
+                {Array.from({ length: 5 }, (_, index) => (
+                  <Link
+                    key={index + 1}
+                    href={`/protected/dashboard/${index + 1}`}
+                    className="flex rounded-lg items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white transition-colors"
+                  >
+                    <span>Trailer {index + 1}</span>
+                  </Link>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+        {isOpen && (
+          <div className="mt-10">
+            <button
+              onClick={handleSignOut}
+              className={`w-full p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors flex items-center gap-3
+              ${!isOpen ? "justify-center" : ""}`}
             >
               <div className="min-w-[24px] flex justify-center">
-                {item.icon}
+                <PiSignOut className="text-xl" />
               </div>
-              {isOpen && <span>{item.label}</span>}
-            </Link>
-          ))}
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                className={`flex items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors
-                  ${!isOpen ? "justify-center" : ""}`}
-              >
-                <div className="min-w-[24px] flex justify-center">
-                  <MdHive className="text-xl" />
-                </div>
-                {isOpen && <span>Trailers</span>}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side={isOpen ? "bottom" : "right"}
-              className={`mt-2 ${
-                !isOpen ? "ml-2" : ""
-              } bg-white shadow-lg rounded-lg overflow-hidden`}
-            >
-              {Array.from({ length: 5 }, (_, index) => (
-                <Link
-                  key={index + 1}
-                  href={`/protected/dashboard/${index + 1}`}
-                  className="flex rounded-lg items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white transition-colors"
-                >
-                  <span>Trailer {index + 1}</span>
-                </Link>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <div className="mt-10">
-          <button
-            onClick={handleSignOut}
-            className={`w-full p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors flex items-center gap-3
-              ${!isOpen ? "justify-center" : ""}`}
-          >
-            <div className="min-w-[24px] flex justify-center">
-              <PiSignOut className="text-xl" />
-            </div>
-            {isOpen && <span>Sign Out</span>}
-          </button>
-        </div>
+              {isOpen && <span>Sign Out</span>}
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );

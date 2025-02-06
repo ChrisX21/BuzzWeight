@@ -13,6 +13,7 @@ interface AveragedSensorData {
 export default function OverviewTempsChart() {
   const [data, setData] = useState<AveragedSensorData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [chartSize, setChartSize] = useState({ width: 1000, height: 400 });
 
   useEffect(() => {
     setLoading(true);
@@ -27,6 +28,18 @@ export default function OverviewTempsChart() {
         console.error("Error fetching dashboard data:", err);
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const updateSize = () => {
+      const width = Math.min(window.innerWidth * 0.9, 900);
+      const height = Math.min(window.innerHeight * 0.4, 400);
+      setChartSize({ width, height });
+    };
+
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
   }, []);
 
   // Group data by trailerId
@@ -58,7 +71,7 @@ export default function OverviewTempsChart() {
       : [];
 
   return (
-    <div className="p-2 shadow-lg rounded-lg">
+    <div className="p-2 w-full max-w-screen-lg mx-auto">
       {loading ? (
         <p>Loading...</p>
       ) : (
@@ -66,8 +79,8 @@ export default function OverviewTempsChart() {
           xAxis={[{ scaleType: "band", data: xAxisLabels }]}
           series={chartSeries}
           colors={["#e9ab17", "#4caf50", "#2196f3", "#ff5722", "#e40f0f"]} // Customize colors per trailer
-          width={1000}
-          height={400}
+          width={chartSize.width}
+          height={chartSize.height}
         />
       )}
     </div>

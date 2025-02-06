@@ -34,7 +34,10 @@ export default function page() {
           station package per trailer.
         </li>
         <li>Minimalistic, responsive design tailored to your workflow.</li>
-        <li>Custom Design</li>
+        <li>
+          Custom manufacturing of weight measurement scales and weather
+          monitoring solutions
+        </li>
       </ul>
 
       <h2 className="font-bold text-lg mt-4">Why Choose BuzzWeight?</h2>
