@@ -54,7 +54,7 @@ mqttClient.on('message', async (topic, message) => {
                 console.log('Aggregated Sensor Data:', sensorData);
 
                 sensorData.TrailerId = process.env.TRAILER_ID;
-                const response = await fetch(`${process.env.SERVER_HOST}/api/getData`, {
+                const response = await fetch(`${process.env.SERVER_HOST}/api/data`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
