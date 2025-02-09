@@ -22,7 +22,7 @@ export default async function writeSupabaseService(data: any, trailerId: number)
         if (error) {
             throw error;
         }
-
+        console.log(rows);
         return sensorData;
     } catch (error) {
         console.error('Error writing sensor data:', error);
