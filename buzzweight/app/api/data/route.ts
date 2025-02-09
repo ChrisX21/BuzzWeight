@@ -5,7 +5,9 @@ export async function POST(req: NextRequest) {
     console.log("Request received");
     try {
         const data = await req.json();
-        await writeSupabaseService(data, data.TrailerId);
+        console.log("Data received:", data);
+        const response = await writeSupabaseService(data, data.TrailerId);
+        console.log(response);
         return NextResponse.json({ message: "Data written successfully" }, { status: 200 });
     } catch (err) {
         console.error("Error writing data:", err);
