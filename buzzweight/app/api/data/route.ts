@@ -5,18 +5,20 @@ export async function POST(req: NextRequest) {
     console.log("Request received");
 
     try {
-        const formData = await req.formData();
-        const data = Object.fromEntries(formData);
-        console.log("Parsed Data:", data);
+        const text = await req.text();  // Get raw body as text
+        console.log("Raw Request Body:", text);
 
-        if (!data || Object.keys(data).length === 0) {
+        if (!text) {
             throw new Error("Empty request body received");
         }
 
-        await writeSupabaseService(data, Number(data.trailerId));
+        const data = JSON.parse(text);  // Manually parse JSON
+        console.log("Parsed Data:", data);
+
+        await writeSupabaseService(data, data.trailerId);
         return NextResponse.json({ message: "Data written successfully" }, { status: 200 });
-    } catch (err) {
-        console.error("Error writing data:", err);
-        return NextResponse.json({ message: `Error writing data: ${err}` }, { status: 500 });
+    } catch (error) {
+        console.error("Error writing data:", error);
+        return NextResponse.json({ message: `Error writing data: ${error}` }, { status: 500 });
     }
 }
