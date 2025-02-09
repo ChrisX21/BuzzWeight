@@ -52,26 +52,34 @@ mqttClient.on('message', async (topic, message) => {
             try {
                 const sensorData = await getAllSensorData();
                 console.log('Aggregated Sensor Data before conversion:', sensorData);
-
+    
                 sensorData.TrailerId = parseInt(process.env.TRAILER_ID, 10);
-
+    
                 // Convert values from string to number where applicable
                 Object.keys(sensorData).forEach((key) => {
                     if (!isNaN(sensorData[key])) {
                         sensorData[key] = Number(sensorData[key]);
                     }
                 });
-
+    
                 console.log('Aggregated Sensor Data after conversion:', sensorData);
-
+    
+                // 🔹 Add the missing fetch call here
+                const response = await fetch(`${process.env.SERVER_HOST}/api/data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sensorData)
+                });
+    
                 if (response.status === 200) {
                     await redisClient.flushAll();
                     console.log('Redis database cleared for next set of data.');
-                }
-                else {
+                } else {
                     console.error('API could not process the data. Status:', response.status);
                 }
-
+    
             } catch (error) {
                 console.error("Error during aggregation and sending operation: " + error);
             } finally {
@@ -79,6 +87,7 @@ mqttClient.on('message', async (topic, message) => {
             }
         }, aggregationInterval);
     }
+    
 });
 
 mqttClient.on('error', (error) => {
