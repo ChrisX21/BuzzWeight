@@ -52,7 +52,7 @@ mqttClient.on('message', async (topic, message) => {
             try {
                 const sensorData = await getAllSensorData();
     
-                sensorData.TrailerId = parseInt(process.env.TRAILER_ID, 10);
+                sensorData.trailerId = parseInt(process.env.TRAILER_ID, 10);
     
                 // Convert values from string to number where applicable
                 Object.keys(sensorData).forEach((key) => {
