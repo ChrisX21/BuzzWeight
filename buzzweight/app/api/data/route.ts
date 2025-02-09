@@ -4,6 +4,7 @@ import writeSupabaseService from '@/lib/services/writeSupabaseService';
 export async function POST(req: NextRequest) {
     try {
         const data = await req.json();
+        console.log(data);
         await writeSupabaseService(data, data.trailerId);
         return NextResponse.json({ message: "Data written successfully" }, { status: 200 });
     } catch (err) {

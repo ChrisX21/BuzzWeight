@@ -51,16 +51,19 @@ mqttClient.on('message', async (topic, message) => {
         timer = setTimeout(async () => {
             try {
                 const sensorData = await getAllSensorData();
-                console.log('Aggregated Sensor Data:', sensorData);
+                console.log('Aggregated Sensor Data before conversion:', sensorData);
 
-                sensorData.TrailerId = process.env.TRAILER_ID;
-                const response = await fetch(`${process.env.SERVER_HOST}/api/data`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(sensorData)
-                }); 
+                sensorData.TrailerId = parseInt(process.env.TRAILER_ID, 10);
+
+                // Convert values from string to number where applicable
+                Object.keys(sensorData).forEach((key) => {
+                    if (!isNaN(sensorData[key])) {
+                        sensorData[key] = Number(sensorData[key]);
+                    }
+                });
+
+                console.log('Aggregated Sensor Data after conversion:', sensorData);
+
                 if (response.status === 200) {
                     await redisClient.flushAll();
                     console.log('Redis database cleared for next set of data.');
