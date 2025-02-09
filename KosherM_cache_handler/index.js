@@ -51,7 +51,6 @@ mqttClient.on('message', async (topic, message) => {
         timer = setTimeout(async () => {
             try {
                 const sensorData = await getAllSensorData();
-                console.log('Aggregated Sensor Data before conversion:', sensorData);
     
                 sensorData.TrailerId = parseInt(process.env.TRAILER_ID, 10);
     
@@ -61,10 +60,7 @@ mqttClient.on('message', async (topic, message) => {
                         sensorData[key] = Number(sensorData[key]);
                     }
                 });
-    
-                console.log('Aggregated Sensor Data after conversion:', sensorData);
-    
-                // 🔹 Add the missing fetch call here
+        
                 const response = await fetch(`${process.env.SERVER_HOST}/api/data`, {
                     method: 'POST',
                     headers: {
@@ -74,8 +70,8 @@ mqttClient.on('message', async (topic, message) => {
                 });
     
                 if (response.status === 200) {
+                    //Flush all data from Redis
                     await redisClient.flushAll();
-                    console.log('Redis database cleared for next set of data.');
                 } else {
                     console.error('API could not process the data. Status:', response.status);
                 }
