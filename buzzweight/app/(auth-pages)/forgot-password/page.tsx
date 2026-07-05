@@ -10,30 +10,34 @@ export default async function ForgotPassword(props: {
 }) {
   const searchParams = await props.searchParams;
   return (
-    <>
-      <div className="border rounded-lg border-grey w-full h-full flex justify-center items-center shadow-lg shadow-grey">
-        <div className="flex flex-col items-center justify-center gap-2 p-10">
-          <h1 className="text-2xl font-medium text-center">
-            Forgot your password?
-          </h1>
-          <p className="text-sm text-center text-foreground font-medium">
-            Already have an account?{" "}
-            <Link href="/sign-in" className="text-primary underline">
-              Sign in
-            </Link>
-          </p>
-        </div>
-        <form className="flex-1 flex flex-col w-full gap-2 text-foreground [&>input]:mb-6 min-w-64 min-h-60 mx-auto p-10" >
-          <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
-            <Label htmlFor="email">Email</Label>
-          <Input name="email" placeholder="you@example.com" required />
-          <SubmitButton formAction={forgotPasswordAction}>
-            Reset Password
-          </SubmitButton>
-          <FormMessage message={searchParams} />
-          </div>
-        </form>
+    <div className="surface-card p-8">
+      <div className="mb-6 text-center">
+        <h1 className="text-2xl font-bold">Forgot your password?</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Enter your email and we’ll send you a reset link.
+        </p>
       </div>
-    </>
+
+      <form className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" name="email" type="email" placeholder="you@example.com" required />
+        </div>
+        <SubmitButton
+          className="w-full rounded-full bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
+          formAction={forgotPasswordAction}
+        >
+          Send reset link
+        </SubmitButton>
+        <FormMessage message={searchParams} />
+      </form>
+
+      <p className="mt-6 text-center text-sm text-muted-foreground">
+        Remembered it?{" "}
+        <Link href="/sign-in" className="font-medium text-amber-600 hover:underline">
+          Sign in
+        </Link>
+      </p>
+    </div>
   );
 }

@@ -14,13 +14,14 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "BuzzWeight",
-  description: "Your pollen production line monitoring solution",
+  title: "BuzzWeight — Smart Apiary Monitoring Hardware & Software",
+  description:
+    "BuzzWeight combines precision weighing & climate hardware with a real-time dashboard to monitor mobile bee-hive apiaries.",
 };
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: "500",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export default function RootLayout({
@@ -34,23 +35,19 @@ export default function RootLayout({
         <LocalizationWrapper>
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
+            defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-            <main className="min-h-screen flex flex-col items-center">
-              <div className="flex-1 w-full flex flex-col gap-20 items-center">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Navbar />
-                </Suspense>
-                <div className="flex flex-col gap-20 max-w-5xl p-5">
-                  {children}
-                  <Analytics />
-                  <SpeedInsights />
-                </div>
-                <Footer />
-              </div>
-            </main>
+            <div className="relative flex min-h-screen flex-col">
+              <Suspense fallback={<div className="h-16 w-full" />}>
+                <Navbar />
+              </Suspense>
+              <main className="flex-1 w-full">{children}</main>
+              <Footer />
+            </div>
+            <Analytics />
+            <SpeedInsights />
           </ThemeProvider>
         </LocalizationWrapper>
       </body>

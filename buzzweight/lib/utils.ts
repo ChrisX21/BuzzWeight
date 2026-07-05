@@ -18,74 +18,65 @@ export function formatDate(date: string): string {
 }
 
 
-export function aggregateSensorData(sensorData: any[]) {
-  const groupedData = sensorData.reduce((acc, item) => {
-      const { created_at, sensor, value, trailerId } = item;
+// A single row as stored in the `sensors` table.
+export interface SensorRow {
+  sensor: string;
+  value: number;
+  trailerId: number;
+  created_at: string;
+  batch_id?: string | null;
+}
 
-      // Check if the created_at timestamp already exists in the accumulator
-      if (!acc[created_at]) {
-          acc[created_at] = { trailerId, created_at };
-      }
+// One reconstituted reading: a group of rows pivoted into { sensorName: value }.
+export interface AggregatedReading {
+  trailerId: number;
+  created_at: string;
+  [sensor: string]: number | string;
+}
 
-      // Add the sensor data to the corresponding timestamp group
-      acc[created_at][sensor] = value;
+// Rows from one POST share a batch_id. Legacy rows (pre-batch_id) fall back to
+// grouping by created_at, which is safe because a batched insert shares now().
+function groupKey(item: SensorRow): string {
+  return item.batch_id ?? item.created_at;
+}
 
+function pivot(sensorData: SensorRow[], allowed?: string[]): AggregatedReading[] {
+  const groupedData = sensorData.reduce<Record<string, AggregatedReading>>((acc, item) => {
+    const { created_at, sensor, value, trailerId } = item;
+
+    if (allowed && !allowed.includes(sensor)) {
       return acc;
+    }
+
+    const key = groupKey(item);
+    if (!acc[key]) {
+      acc[key] = { trailerId, created_at };
+    }
+    acc[key][sensor] = value;
+
+    return acc;
   }, {});
 
-  // Convert the object back to an array
   return Object.values(groupedData);
 }
 
-export function aggregateScalesSensorData(sensorData: any[]) {
+export function aggregateSensorData(sensorData: SensorRow[]): AggregatedReading[] {
+  return pivot(sensorData);
+}
+
+export function aggregateScalesSensorData(sensorData: SensorRow[]): AggregatedReading[] {
   const scales = ["scale1", "scale2", "scale3", "scale4"];
-
-  const groupedData = sensorData.reduce((acc, item) => {
-    const { created_at, sensor, value, trailerId } = item;
-
-    // Only process sensors that match the desired scales
-    if (scales.includes(sensor)) {
-      // Check if the created_at timestamp already exists in the accumulator
-      if (!acc[created_at]) {
-        acc[created_at] = { trailerId, created_at };
-      }
-
-      // Add the sensor data to the corresponding timestamp group
-      acc[created_at][sensor] = value;
-    }
-
-    return acc;
-  }, {});
-
-  // Convert the object back to an array and filter out any incomplete entries
-  return Object.values(groupedData).filter((entry: any) => 
-    scales.every(scale => scale in entry) // Ensure all scales exist in the final object
+  // Keep any reading that has at least one scale present so a single offline
+  // sensor doesn't drop the whole reading from the chart.
+  return pivot(sensorData, scales).filter((entry) =>
+    scales.some((scale) => scale in entry),
   );
 }
 
-export function aggregateTempSensorData(sensorData: any[]) {
-  const scales = ["temp1", "temp2", "temp3"];
-
-  const groupedData = sensorData.reduce((acc, item) => {
-    const { created_at, sensor, value, trailerId } = item;
-
-    // Only process sensors that match the desired scales
-    if (scales.includes(sensor)) {
-      // Check if the created_at timestamp already exists in the accumulator
-      if (!acc[created_at]) {
-        acc[created_at] = { trailerId, created_at };
-      }
-
-      // Add the sensor data to the corresponding timestamp group
-      acc[created_at][sensor] = value;
-    }
-
-    return acc;
-  }, {});
-
-  // Convert the object back to an array and filter out any incomplete entries
-  return Object.values(groupedData).filter((entry: any) => 
-    scales.every(scale => scale in entry) // Ensure all scales exist in the final object
+export function aggregateTempSensorData(sensorData: SensorRow[]): AggregatedReading[] {
+  const temps = ["temp1", "temp2", "temp3"];
+  return pivot(sensorData, temps).filter((entry) =>
+    temps.some((temp) => temp in entry),
   );
 }
 

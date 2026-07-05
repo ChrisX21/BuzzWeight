@@ -1,71 +1,88 @@
-import React from "react";
+import Link from "next/link";
+import { Cpu, LineChart, Target, Sparkles } from "lucide-react";
 
-export default function page() {
+export const metadata = {
+  title: "About — BuzzWeight",
+  description:
+    "BuzzWeight builds precision monitoring hardware and software for mobile bee-hive apiaries.",
+};
+
+export default function AboutPage() {
   return (
-    <div className="shadow-lg rounded-lg p-4 mt-5">
-      <h1 className="text-center font-bold text-xl mb-4">About BuzzWeight</h1>
-
-      <p className="mb-4">
-        Welcome to <strong>BuzzWeight</strong>, your innovative solution for
-        monitoring and managing weight, temperature, and humidity sensor data
-        from your bee hive trailers. Designed with efficiency and precision in
-        mind, BuzzWeight serves as a comprehensive dashboard to give you
-        real-time insights into your sensor systems, as well as custom hardware
-        solutions for monitoring.
+    <div className="container-page max-w-4xl py-16">
+      <span className="eyebrow">About us</span>
+      <h1 className="mt-5 text-4xl font-extrabold tracking-tight">
+        Data-driven beekeeping, from hive to dashboard
+      </h1>
+      <p className="mt-5 text-lg text-muted-foreground">
+        <strong className="text-foreground">BuzzWeight</strong> helps beekeepers
+        monitor weight, pollen yield, temperature and humidity across their
+        bee-hive trailers. We design the sensor hardware and build the software
+        that turns its readings into real-time, actionable insight.
       </p>
 
-      <h2 className="font-bold text-lg mt-4">Our Mission</h2>
-      <p className="mb-4">
-        At BuzzWeight, we aim to empower businesses and individuals with
-        accurate and reliable sensor data for their hives. Our mission is to
-        simplify complex data management processes, enabling users to make
-        informed decisions that enhance productivity and operational efficiency.
-      </p>
+      <div className="mt-10 grid gap-6 sm:grid-cols-2">
+        <div className="surface-card p-6">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+            <Cpu className="h-5 w-5" />
+          </span>
+          <h2 className="mt-4 text-lg font-semibold">The hardware</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Custom-manufactured, solar-powered weighing scales and weather
+            stations, calibrated and built to survive the field.
+          </p>
+        </div>
+        <div className="surface-card p-6">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+            <LineChart className="h-5 w-5" />
+          </span>
+          <h2 className="mt-4 text-lg font-semibold">The software</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            A responsive dashboard that aggregates up to 5 trailers — each with 4
+            production scales, a hive scale and a weather station.
+          </p>
+        </div>
+      </div>
 
-      <h2 className="font-bold text-lg mt-4">What We Offer</h2>
-      <ul className="list-disc ml-5 mb-4">
-        <li>
-          A user-friendly dashboard for real-time monitoring of weight,
-          temperature, and humidity data.
-        </li>
-        <li>
-          Comprehensive data aggregation for up to 5 trailers, with insights
-          derived from 4 individual production scales, hive scale and weather
-          station package per trailer.
-        </li>
-        <li>Minimalistic, responsive design tailored to your workflow.</li>
-        <li>
-          Custom manufacturing of weight measurement scales and weather
-          monitoring solutions
-        </li>
-      </ul>
+      <div className="mt-12 space-y-8">
+        <section>
+          <h2 className="flex items-center gap-2 text-xl font-bold">
+            <Target className="h-5 w-5 text-amber-600" /> Our mission
+          </h2>
+          <p className="mt-3 text-muted-foreground">
+            We empower beekeepers with accurate, reliable sensor data. Our goal
+            is to simplify complex data management so you can make informed
+            decisions that improve colony health and operational efficiency.
+          </p>
+        </section>
 
-      <h2 className="font-bold text-lg mt-4">Why Choose BuzzWeight?</h2>
-      <p className="mb-4">
-        BuzzWeight stands out for its focus on simplicity, precision, and
-        scalability. Whether you're managing a fleet of bee hive trailers or
-        monitoring environmental conditions, BuzzWeight provides a dependable
-        solution to handle your data effortlessly.
-      </p>
+        <section>
+          <h2 className="flex items-center gap-2 text-xl font-bold">
+            <Sparkles className="h-5 w-5 text-amber-600" /> Why BuzzWeight
+          </h2>
+          <p className="mt-3 text-muted-foreground">
+            Simplicity, precision and scalability. Whether you manage a single
+            trailer or a fleet, BuzzWeight handles your data effortlessly — and
+            because hardware and software are offered separately, you only pay
+            for what you need.
+          </p>
+        </section>
+      </div>
 
-      <h2 className="font-bold text-lg mt-4">Looking Ahead</h2>
-      <p className="mb-4">
-        We're committed to continuously improving BuzzWeight with new features,
-        updates, and enhancements based on user feedback. Our vision is to make
-        sensor data management accessible and efficient for everyone.
-      </p>
-
-      <h2 className="font-bold text-lg mt-4">Get in Touch</h2>
-      <p className="mb-4">
-        We'd love to hear from you! If you have any questions, suggestions, or
-        feedback, feel free to reach out to us at{" "}
-        <strong>i.ivanov@airsofia.com</strong> or through the{" "}
-        <strong>Contact form</strong>.
-      </p>
-
-      <p className="text-center font-bold mt-4">
-        Thank you for choosing BuzzWeight!
-      </p>
+      <div className="surface-card mt-12 flex flex-col items-start gap-4 p-8 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-lg font-semibold">Get in touch</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Questions, suggestions or feedback? We’d love to hear from you.
+          </p>
+        </div>
+        <Link
+          href="/contact"
+          className="inline-flex shrink-0 items-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          Contact us
+        </Link>
+      </div>
     </div>
   );
 }

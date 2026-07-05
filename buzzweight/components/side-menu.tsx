@@ -1,121 +1,99 @@
 "use client";
 
-import { signOutAction } from "@/app/actions";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
+import ThemeToggle from "@/components/theme-toggle";
 import { GiTreeBeehive } from "react-icons/gi";
 import { AiOutlineHome } from "react-icons/ai";
 import { MdHive } from "react-icons/md";
 import { FiSettings, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { PiSignOut } from "react-icons/pi";
 
+const itemClass =
+  "flex items-center gap-3 rounded-lg p-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-300";
+
 export default function SideMenu() {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleSignOut = async () => {
-    if (window.confirm("Are you sure you want to sign out?")) {
-      await signOutAction();
-    }
+    if (!window.confirm("Are you sure you want to sign out?")) return;
+    await fetch("/api/auth/sign-out", { method: "POST" });
+    // Full navigation so the cleared cookies take effect on the server render.
+    window.location.assign("/sign-in");
   };
 
   return (
     <nav
-      className={`fixed top-0 left-0 h-full text-gray-800 shadow-lg transition-all duration-300 ease-in-out z-40
-      ${isOpen ? "w-64 bg-white" : "w-16 bg-transparent shadow-none"}`}
+      className={`fixed left-0 top-0 z-40 h-full transition-all duration-300 ease-in-out
+      ${isOpen ? "w-64 border-r border-border bg-card shadow-lg" : "w-16 bg-transparent"}`}
     >
-      <div className="flex flex-col p-5">
-        <div className="flex justify-between items-center mb-8">
+      <div className="flex h-full flex-col p-4">
+        <div className="mb-6 flex items-center justify-between">
           {isOpen && (
-            <div className="flex items-center gap-2 text-xl font-semibold text-[#e9ab17]">
-              BuzzWeight <GiTreeBeehive className="text-2xl" />
-            </div>
+            <Link href="/" className="flex items-center gap-2 font-extrabold tracking-tight">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-white">
+                <GiTreeBeehive className="h-4 w-4" />
+              </span>
+              Buzz<span className="-ml-2 text-amber-600 dark:text-amber-400">Weight</span>
+            </Link>
           )}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`h-10 w-10 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors flex items-center justify-center
-              ${!isOpen ? "w-full" : ""}`}
+            aria-label={isOpen ? "Collapse menu" : "Expand menu"}
+            className={`flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-foreground/70 transition-colors hover:bg-secondary ${!isOpen ? "w-full" : ""}`}
           >
             {isOpen ? <FiChevronLeft /> : <FiChevronRight />}
           </button>
         </div>
 
-        <div className="flex flex-col gap-2">
-          {isOpen
-            ? [
-                {
-                  href: "/",
-                  icon: <AiOutlineHome className="text-xl" />,
-                  label: "Home",
-                },
-                {
-                  href: "/protected/settings",
-                  icon: <FiSettings className="text-xl" />,
-                  label: "Settings",
-                },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors`}
-                >
-                  <div className="min-w-[24px] flex justify-center">
-                    {item.icon}
-                  </div>
-                  <span>{item.label}</span>
-                </Link>
-              ))
-            : null}
-
-          {isOpen && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className={`flex items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors
-                    ${!isOpen ? "justify-center" : ""}`}
-                >
-                  <div className="min-w-[24px] flex justify-center">
-                    <MdHive className="text-xl" />
-                  </div>
-                  <span>Trailers</span>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side={isOpen ? "bottom" : "right"}
-                className={`mt-2 ${
-                  !isOpen ? "ml-2" : ""
-                } bg-white shadow-lg rounded-lg overflow-hidden`}
-              >
-                {Array.from({ length: 5 }, (_, index) => (
-                  <Link
-                    key={index + 1}
-                    href={`/protected/dashboard/${index + 1}`}
-                    className="flex rounded-lg items-center gap-3 p-2 hover:bg-[#e9ab17] hover:text-white transition-colors"
-                  >
-                    <span>Trailer {index + 1}</span>
-                  </Link>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
         {isOpen && (
-          <div className="mt-10">
-            <button
-              onClick={handleSignOut}
-              className={`w-full p-2 hover:bg-[#e9ab17] hover:text-white rounded-lg transition-colors flex items-center gap-3
-              ${!isOpen ? "justify-center" : ""}`}
-            >
-              <div className="min-w-[24px] flex justify-center">
-                <PiSignOut className="text-xl" />
+          <>
+            <div className="flex flex-col gap-1">
+              <Link href="/" className={itemClass}>
+                <AiOutlineHome className="text-lg" /> Home
+              </Link>
+              <Link href="/protected/settings" className={itemClass}>
+                <FiSettings className="text-lg" /> Settings
+              </Link>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={itemClass}>
+                    <MdHive className="text-lg" /> Trailers
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="bottom" className="w-48">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Link
+                      key={i + 1}
+                      href={`/protected/dashboard/${i + 1}`}
+                      className="flex items-center gap-3 rounded-md p-2 text-sm transition-colors hover:bg-amber-500/10 hover:text-amber-700 dark:hover:text-amber-300"
+                    >
+                      Trailer {i + 1}
+                    </Link>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            <div className="mt-auto flex flex-col gap-3">
+              <div className="flex items-center justify-between rounded-lg border border-border p-2">
+                <span className="text-xs text-muted-foreground">Theme</span>
+                <ThemeToggle />
               </div>
-              {isOpen && <span>Sign Out</span>}
-            </button>
-          </div>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-3 rounded-lg p-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-destructive/10 hover:text-destructive"
+              >
+                <PiSignOut className="text-lg" /> Sign out
+              </button>
+            </div>
+          </>
         )}
       </div>
     </nav>

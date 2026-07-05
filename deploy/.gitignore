@@ -1,0 +1,4 @@
+# Runtime data written by the stack (the versioned config under volumes/ stays)
+volumes/db/data/
+volumes/storage/
+volumes/functions/**/node_modules/

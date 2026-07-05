@@ -5,8 +5,8 @@
 #include <ArduinoJson.h>
 
 // WiFi and MQTT settings
-const char* ssid = "Air Sofia B";             // WiFi SSID
-const char* password = "airsofia2024";        // WiFi Password
+const char* ssid = "YOUR_WIFI_SSID";          // WiFi SSID — set before flashing
+const char* password = "YOUR_WIFI_PASSWORD";  // WiFi Password — set before flashing
 const char* mqtt_server = "192.168.0.222";    // MQTT Broker address
 const char* mqtt_topic = "Trailer1/sensors";  // MQTT Topic
 

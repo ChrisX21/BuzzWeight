@@ -1,16 +1,28 @@
 import InviteUsers from "@/components/invite-users";
-import React from "react";
 
 export default function Settings() {
   return (
-    <div>
-      <h1 className="text-xl text-center">Global Settings</h1>
-      <div className="mt-5 flex justify-start mr-auto">
-        <InviteUsers />
+    <div className="flex flex-col gap-8">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Manage access and workspace preferences.
+        </p>
       </div>
-      <h3 className="text-center mt-5 text-gray-400">
-        More features coming soon...
-      </h3>
+
+      <section className="surface-card p-6">
+        <h2 className="text-lg font-semibold">Invite a team member</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Send an email invitation to give someone access to the dashboard.
+        </p>
+        <div className="mt-4">
+          <InviteUsers />
+        </div>
+      </section>
+
+      <p className="text-center text-sm text-muted-foreground">
+        More features coming soon…
+      </p>
     </div>
   );
 }

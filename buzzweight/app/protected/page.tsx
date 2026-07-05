@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -15,25 +14,27 @@ export default async function ProtectedPage() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 text-center mt-5 ">
-      <h1 className="text-xl md:text-2xl font-bold">Overview</h1>
-      <p className="text-sm md:text-base">
-        Welcome back, <b>{user.email}</b>!
-      </p>
-
-      <div className="w-full bg-white shadow-md rounded-lg p-2">
-        <h3 className="mt-3 text-lg font-semibold">
-          Pollen Scales Overview (24hrs)
-        </h3>
-        <OverviewChart />
+    <div className="flex flex-col gap-8">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Welcome back, <span className="font-medium text-foreground">{user.email}</span>
+        </p>
       </div>
 
-      <div className="w-full bg-white shadow-md rounded-lg p-2">
-        <h3 className="mt-3 text-lg font-semibold">
-          Temperature Overview (24hrs)
-        </h3>
-        <OverviewTempsChart />
-      </div>
+      <section className="surface-card p-5">
+        <h3 className="text-lg font-semibold">Pollen Scales Overview (24 hrs)</h3>
+        <div className="mt-3">
+          <OverviewChart />
+        </div>
+      </section>
+
+      <section className="surface-card p-5">
+        <h3 className="text-lg font-semibold">Temperature Overview (24 hrs)</h3>
+        <div className="mt-3">
+          <OverviewTempsChart />
+        </div>
+      </section>
     </div>
   );
 }

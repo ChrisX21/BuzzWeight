@@ -67,43 +67,49 @@ export default function DashboardPage({
   }, [id, dateRange]);
 
   if (loading)
-    return <div className="mt-5 text-center text-gray-500">Loading...</div>;
+    return <div className="mt-5 text-center text-muted-foreground">Loading…</div>;
   if (!data)
     return (
-      <div className="mt-5 text-center text-gray-500">
-        No data found for ID: {id}
+      <div className="mt-5 text-center text-muted-foreground">
+        No data found for Trailer {id}
       </div>
     );
 
   return (
-    <div className="container mx-auto">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center">
-        Trailer {id} Dashboard
-      </h1>
-      <h3 className="text-gray-800 text-lg mb-2 text-center">
-        Select Date Range
-      </h3>
-      <div className="mb-2 flex justify-center">
+    <div className="flex flex-col gap-6">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold tracking-tight">Trailer {id} Dashboard</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Select a date range to explore sensor history.
+        </p>
+      </div>
+
+      <div className="surface-card flex flex-col items-center gap-3 p-5">
         <DateRangePicker
           startDate={dateRange[0]}
           endDate={dateRange[1]}
           onChange={(dates) => setDateRange(dates)}
         />
       </div>
-      <SensorsTable sensorData={data.sensorData} />
-      <div className="flex justify-center mt-6">
+
+      <div className="surface-card p-5">
+        <SensorsTable sensorData={data.sensorData} />
+      </div>
+
+      <div className="surface-card p-5">
         <DashboardCharts data={data} />
       </div>
-      <div className="mt-5 flex justify-center gap-4">
+
+      <div className="flex flex-wrap justify-center gap-3">
         <Link
-          href="/"
-          className="shadow-lg rounded-lg bg-gray-900 hover:bg-[#e9ab17] transition-colors text-white px-4 py-2"
+          href="/protected"
+          className="inline-flex items-center rounded-full border border-border px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-secondary"
         >
           Return to Overview
         </Link>
         <Button
           onClick={handleExportClick}
-          className="shadow-lg rounded-lg bg-gray-900 hover:bg-[#e9ab17] transition-colors text-white px-4 py-2"
+          className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
         >
           Export Data
         </Button>

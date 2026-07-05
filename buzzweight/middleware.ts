@@ -9,12 +9,14 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except:
+     * - api (route handlers — must NOT run auth middleware; it consumes the
+     *   request body and empties POSTs to /api/data on Vercel)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
      * Feel free to modify this pattern to include more paths.
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

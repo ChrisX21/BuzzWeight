@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Button } from "./ui/button";
 
 export default function InviteUsers() {
   const [email, setEmail] = React.useState("");
@@ -18,54 +17,46 @@ export default function InviteUsers() {
     try {
       const response = await fetch("/api/admin/invite", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
       if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(
-          message || "An error occurred while sending the invite."
-        );
+        const { message } = await response.json().catch(() => ({}));
+        throw new Error(message || "An error occurred while sending the invite.");
       }
 
       setSuccessMessage("Invite sent!");
+      setEmail("");
     } catch (err: any) {
       setError(err.message || "An error occurred while sending the invite.");
     } finally {
       setIsLoading(false);
-      setEmail("");
     }
   };
 
   return (
-    <div className="shadow-lg rounded-lg p-8 bg-white max-w-md mx-auto">
-      <h1 className="text-center mb-4 text-2xl font-semibold text-gray-800">
-        Invite Users
-      </h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-3 sm:flex-row sm:items-start" onSubmit={handleSubmit}>
+      <div className="flex-1">
         <input
-          className="flex-grow border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#e9ab17] transition duration-200 ease-in-out"
+          className="block w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30"
           type="email"
-          placeholder="email@email.com"
+          placeholder="name@example.com"
           id="email"
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {successMessage && (
-          <p className="text-green-500 text-sm">{successMessage}</p>
-        )}
-        <Button
-          className="bg-gray-800 hover:bg-[#e9ab17] transition delay-3 p-3 text-white rounded-lg shadow-md hover:shadow-lg"
-          disabled={isLoading}
-          type="submit"
-        >
-          {isLoading ? "Sending..." : "Send Invite"}
-        </Button>
-      </form>
-    </div>
+        {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
+        {successMessage && <p className="mt-2 text-sm text-emerald-600">{successMessage}</p>}
+      </div>
+      <button
+        disabled={isLoading}
+        type="submit"
+        className="inline-flex shrink-0 items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
+      >
+        {isLoading ? "Sending…" : "Send invite"}
+      </button>
+    </form>
   );
 }

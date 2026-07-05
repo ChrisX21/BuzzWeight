@@ -20,6 +20,11 @@
 .DS_Store
 *.pem
 
+# database dumps / backups (may contain auth users, tokens — never commit)
+*.backup
+*.sql.gz
+db_cluster*
+
 # debug
 npm-debug.log*
 yarn-debug.log*

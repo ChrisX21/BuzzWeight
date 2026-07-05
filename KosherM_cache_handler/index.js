@@ -63,7 +63,8 @@ mqttClient.on('message', async (topic, message) => {
 
                 const response = await axios.post(`${process.env.SERVER_HOST}/api/data`, sensorData, {
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'x-ingest-secret': process.env.INGEST_SECRET
                     }
                 });
 

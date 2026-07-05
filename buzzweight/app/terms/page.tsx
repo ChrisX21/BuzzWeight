@@ -1,70 +1,94 @@
-import React from "react";
+import Link from "next/link";
+
+export const metadata = { title: "Terms of Service — BuzzWeight" };
 
 export default function TermsOfService() {
   return (
-    <div className="shadow-lg rounded-lg p-4 mt-5">
-      <h1 className="text-center font-bold text-xl mb-4">Terms of Service</h1>
-
-      <p>
+    <div className="container-page max-w-3xl py-16">
+      <span className="eyebrow">Legal</span>
+      <h1 className="mt-5 text-4xl font-extrabold tracking-tight">Terms of Service</h1>
+      <p className="mt-4 text-muted-foreground">
         Welcome to BuzzWeight. By accessing or using our services, you agree to
         be bound by these Terms of Service. If you do not agree, please{" "}
-        <b>DO NOT</b> use our services.
+        <strong className="text-foreground">do not</strong> use our services.
       </p>
 
-      <h2 className="font-bold text-lg mt-4">1. Acceptance of Terms</h2>
-      <p>
-        By using BuzzWeight, you confirm that you have read, understood, and
-        agree to these terms. If you are using our services on behalf of an
-        organization, you represent that you have the authority to bind that
-        organization.
-      </p>
+      <div className="mt-10 space-y-8">
+        <section>
+          <h2 className="text-lg font-semibold">1. Acceptance of Terms</h2>
+          <p className="mt-2 text-muted-foreground">
+            By using BuzzWeight, you confirm that you have read, understood, and
+            agree to these terms. If you are using our services on behalf of an
+            organization, you represent that you have the authority to bind that
+            organization.
+          </p>
+        </section>
 
-      <h2 className="font-bold text-lg mt-4">2. User Responsibilities</h2>
-      <p>As a user, you agree to:</p>
-      <ul className="list-disc ml-5">
-        <li>Provide accurate information when creating an account.</li>
-        <li>Keep your account credentials secure and confidential.</li>
-        <li>Use our services in compliance with applicable laws.</li>
-        <li>Refrain from using our services for unlawful actions.</li>
-      </ul>
+        <section>
+          <h2 className="text-lg font-semibold">2. User Responsibilities</h2>
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+            <li>Provide accurate information when creating an account.</li>
+            <li>Keep your account credentials secure and confidential.</li>
+            <li>Use our services in compliance with applicable laws.</li>
+            <li>Refrain from using our services for unlawful actions.</li>
+          </ul>
+        </section>
 
-      <h2 className="font-bold text-lg mt-4">4. Intellectual Property</h2>
-      <p>
-        All content, trademarks, and logos are the property of BuzzWeight. Users
-        are granted a limited license to access and use our services for
-        personal or organizational purposes only.
-      </p>
+        <section>
+          <h2 className="text-lg font-semibold">3. Intellectual Property</h2>
+          <p className="mt-2 text-muted-foreground">
+            All content, trademarks, and logos are the property of BuzzWeight.
+            Users are granted a limited license to access and use our services
+            for personal or organizational purposes only.
+          </p>
+        </section>
 
-      <h2 className="font-bold text-lg mt-4">5. Termination</h2>
-      <p>
-        We reserve the right to terminate or suspend your access to our services
-        for violating these terms or engaging in unlawful activities.
-      </p>
+        <section>
+          <h2 className="text-lg font-semibold">4. Termination</h2>
+          <p className="mt-2 text-muted-foreground">
+            We reserve the right to terminate or suspend your access to our
+            services for violating these terms or engaging in unlawful
+            activities.
+          </p>
+        </section>
 
-      <h2 className="font-bold text-lg mt-4">6. Limitation of Liability</h2>
-      <p>
-        BuzzWeight is not liable for any direct, indirect, or consequential
-        damages resulting from your use of our services.
-      </p>
+        <section>
+          <h2 className="text-lg font-semibold">5. Limitation of Liability</h2>
+          <p className="mt-2 text-muted-foreground">
+            BuzzWeight is not liable for any direct, indirect, or consequential
+            damages resulting from your use of our services.
+          </p>
+        </section>
 
-      <h2 className="font-bold text-lg mt-4">7. Governing Law</h2>
-      <p>
-        These terms are governed by the laws of the European Union & Bulgarian
-        Government.
-      </p>
+        <section>
+          <h2 className="text-lg font-semibold">6. Governing Law</h2>
+          <p className="mt-2 text-muted-foreground">
+            These terms are governed by the laws of the European Union and the
+            Republic of Bulgaria.
+          </p>
+        </section>
 
-      <h2 className="font-bold text-lg mt-4">8. Changes to Terms</h2>
-      <p>
-        We may update these terms from time to time. Changes will be effective
-        upon posting on this page. Continued use of our services constitutes
-        acceptance of the revised terms.
-      </p>
+        <section>
+          <h2 className="text-lg font-semibold">7. Changes to Terms</h2>
+          <p className="mt-2 text-muted-foreground">
+            We may update these terms from time to time. Changes will be
+            effective upon posting on this page. Continued use of our services
+            constitutes acceptance of the revised terms.
+          </p>
+        </section>
 
-      <h2 className="font-bold text-lg mt-4">9. Contact Us</h2>
-      <p>
-        If you have any questions about these terms, contact us at
-        i.ivanov@airsofia.com or through the contact form.
-      </p>
+        <section>
+          <h2 className="text-lg font-semibold">8. Contact Us</h2>
+          <p className="mt-2 text-muted-foreground">
+            If you have any questions about these terms, please reach us through
+            our{" "}
+            <Link href="/contact" className="font-medium text-amber-600 hover:underline">
+              contact form
+            </Link>
+            .
+          </p>
+        </section>
+      </div>
     </div>
   );
 }

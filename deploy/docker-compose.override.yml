@@ -1,0 +1,73 @@
+# BuzzWeight application + edge pipeline, layered on top of the self-hosted
+# Supabase stack (docker-compose.yml). Auto-merged by docker compose.
+#
+#   cd deploy && docker compose up
+#
+services:
+  # --- Next.js web app + ingestion API ---
+  app:
+    build:
+      context: ../buzzweight
+      dockerfile: Dockerfile
+      args:
+        # NEXT_PUBLIC_* are inlined at build time. The app only uses Supabase
+        # server-side, so it targets the internal Kong gateway.
+        NEXT_PUBLIC_SUPABASE_URL: http://kong:8000
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${ANON_KEY}
+    restart: unless-stopped
+    depends_on:
+      kong:
+        condition: service_started
+      db:
+        condition: service_healthy
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: http://kong:8000
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      INGEST_SECRET: ${INGEST_SECRET}
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      CONTACT_TO: ${CONTACT_TO:-chrisalexiev@icloud.com}
+      CONTACT_FROM: ${CONTACT_FROM:-BuzzWeight <onboarding@resend.dev>}
+    ports:
+      - "3000:3000"
+
+  # --- Our sensor schema is applied on first DB init ---
+  db:
+    volumes:
+      - ../buzzweight/supabase/migrations/20260705120000_init_sensors.sql:/docker-entrypoint-initdb.d/migrations/99-buzzweight-01-init.sql:Z
+      - ../buzzweight/supabase/migrations/20260705120100_secure_sensors.sql:/docker-entrypoint-initdb.d/migrations/99-buzzweight-02-secure.sql:Z
+
+  # --- Edge pipeline: MQTT broker, Redis cache, aggregator ---
+  mqtt:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    volumes:
+      - ../KosherM_cache_handler/mosquitto/config:/mosquitto/config
+    ports:
+      - "1883:1883"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  cache-handler:
+    build:
+      context: ../KosherM_cache_handler
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - mqtt
+      - app
+    environment:
+      SERVER_HOST: http://app:3000
+      INGEST_SECRET: ${INGEST_SECRET}
+      MQTT_HOST: mqtt
+      MQTT_PORT: "1883"
+      MQTT_TOPIC: Trailer1/sensors
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      TRAILER_ID: "1"
+      AGGREGATION_INTERVAL: "300000"
+      CACHE_EXPIRATION: "600"

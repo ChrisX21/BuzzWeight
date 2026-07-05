@@ -1,144 +1,93 @@
 "use client";
 
-import { signInAction } from "@/app/actions";
-import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GiTreeBeehive } from "react-icons/gi";
 import Link from "next/link";
 import { useState } from "react";
 
-type FormErrors = {
-  email: string;
-  password: string;
-  general: string;
-};
+type FormErrors = { email: string; password: string; general: string };
+const empty: FormErrors = { email: "", password: "", general: "" };
 
 export default function Login() {
-  const [errors, setErrors] = useState<FormErrors>({
-    email: "",
-    password: "",
-    general: "",
-  });
+  const [errors, setErrors] = useState<FormErrors>(empty);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // Reset errors
-    setErrors({ email: "", password: "", general: "" });
+    setErrors(empty);
 
     const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
+    const email = (formData.get("email") as string)?.trim();
     const password = formData.get("password") as string;
 
-    // Validate email
-    if (!email) {
-      setErrors((prev) => ({ ...prev, email: "Email is required" }));
-      return;
-    }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setErrors((prev) => ({ ...prev, email: "Please enter a valid email" }));
-      return;
-    }
+    if (!email) return setErrors((p) => ({ ...p, email: "Email is required" }));
+    if (!/\S+@\S+\.\S+/.test(email)) return setErrors((p) => ({ ...p, email: "Please enter a valid email" }));
+    if (!password) return setErrors((p) => ({ ...p, password: "Password is required" }));
+    if (password.length < 6) return setErrors((p) => ({ ...p, password: "Password must be at least 6 characters" }));
 
-    // Validate password
-    if (!password) {
-      setErrors((prev) => ({ ...prev, password: "Password is required" }));
-      return;
-    }
-    if (password.length < 6) {
-      setErrors((prev) => ({
-        ...prev,
-        password: "Password must be at least 6 characters",
-      }));
-      return;
-    }
-
+    setSubmitting(true);
     try {
-      await signInAction(formData);
-    } catch (error) {
-      setErrors((prev) => ({
-        ...prev,
-        general: "Invalid email or password",
-      }));
+      const res = await fetch("/api/auth/sign-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setErrors((p) => ({ ...p, general: data.error || "Sign in failed. Please try again." }));
+        setSubmitting(false);
+        return;
+      }
+
+      // Full navigation so the freshly-set session cookies are sent and the
+      // protected pages render server-side with the new session.
+      window.location.assign("/protected");
+    } catch {
+      setErrors((p) => ({ ...p, general: "Could not reach the server. Please try again." }));
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 p-10 mb-10 min-h-60">
-      <h1 className="text-2xl font-medium text-center text-foreground mb-4">
-        Welcome back!
-      </h1>
-      <div className="border rounded-lg border-grey w-full max-w-md flex flex-col items-center shadow-lg p-10">
-        <h2 className="text-xl font-medium text-center mb-4">Sign in</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="you@example.com"
-              required
-              aria-describedby={errors.email ? "email-error" : undefined}
-            />
-            {errors.email && (
-              <p
-                id="email-error"
-                className="text-red-500 text-sm mt-1"
-                aria-live="polite"
-              >
-                {errors.email}
-              </p>
-            )}
-          </div>
+    <div className="surface-card p-8">
+      <div className="mb-6 flex flex-col items-center text-center">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-sm">
+          <GiTreeBeehive className="h-6 w-6" />
+        </span>
+        <h1 className="mt-4 text-2xl font-bold">Welcome back</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Sign in to your BuzzWeight dashboard</p>
+      </div>
 
-          <div className="flex flex-col gap-1">
-            <div className="flex justify-between items-center">
-              <Label htmlFor="password">Password</Label>
-            </div>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Your password"
-              required
-              aria-describedby={errors.password ? "password-error" : undefined}
-            />
-            {errors.password && (
-              <p
-                id="password-error"
-                className="text-red-500 text-sm mt-1"
-                aria-live="polite"
-              >
-                {errors.password}
-              </p>
-            )}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" name="email" type="email" placeholder="you@example.com" required />
+          {errors.email && <p className="text-sm text-destructive" aria-live="polite">{errors.email}</p>}
+        </div>
 
-            <Link
-              href="/forgot-password"
-              className="text-xs text-foreground underline mt-2 mb-2 text-right w-full"
-            >
-              Forgot Password?
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password">Password</Label>
+            <Link href="/forgot-password" className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground">
+              Forgot password?
             </Link>
           </div>
+          <Input id="password" name="password" type="password" placeholder="Your password" required />
+          {errors.password && <p className="text-sm text-destructive" aria-live="polite">{errors.password}</p>}
+        </div>
 
-          {errors.general && (
-            <p
-              className="text-red-500 text-sm text-center mt-2"
-              aria-live="polite"
-            >
-              {errors.general}
-            </p>
-          )}
+        {errors.general && <p className="text-center text-sm text-destructive" aria-live="polite">{errors.general}</p>}
 
-          <SubmitButton
-            className="hover:bg-[#e9ab17]"
-            pendingText="Signing In..."
-          >
-            Sign in
-          </SubmitButton>
-        </form>
-      </div>
+        <button
+          type="submit"
+          disabled={submitting}
+          className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-primary py-2.5 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
+        >
+          {submitting ? "Signing in…" : "Sign in"}
+        </button>
+      </form>
     </div>
   );
 }
